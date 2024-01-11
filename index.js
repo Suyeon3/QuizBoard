@@ -6,7 +6,7 @@ require('dotenv').config();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://127.0.0.1:3000",
+        origin: "http://localhost:3000",
     }
 })
 
