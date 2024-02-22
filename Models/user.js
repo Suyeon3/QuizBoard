@@ -5,14 +5,34 @@ const imageSchema = new mongoose.Schema(
     { timeStamp : true}
 )
 
+const Image = mongoose.model('image', imageSchema);
+
 const userSchema = new mongoose.Schema({
-	name: {
+	userName: {
+		type: String,
+		maxlength: 50,
+	},
+	userId: {
 		type: String,
 		required: true,
 		unique: true
 	},
-	gallery: {
-		images: [imageSchema]
+	email: {
+		type: String,
+		trim: true,
+		unique: true,
+	},
+	password: {
+		type: String,
+		required: true,
+		minlength: 5,
+	},
+	gallery: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: Image
+	}],
+	token: {
+		type: String,	
 	},
     online: {
         type: Boolean,
@@ -20,6 +40,6 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('user', userSchema);
 
 module.exports = User;
