@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [userId, setUserId] = useState('');
     const [userPw, setUserPw] = useState('');
+    const navigate = useNavigate();
 
     // Todo: 쿠키에 token 저장하고 메인으로 리다이렉트?
-    
+
     useEffect(() => {
     }, [userId, userPw])
 
@@ -23,16 +25,21 @@ export default function Login() {
             },
             body: JSON.stringify(userData)
         })
-        .then((res) => res.json())
-        .then((json) => {
-            if (json.isLogin === 'True') {
-                alert("로그인 성공");
-            }
-            else {
-                alert(json.isLogin);
-            }
-        });
-        
+            .then((res) => res.json())
+            .then((json) => {
+                if (json.isLogin === true) {
+                    // alert("로그인 성공");
+                    navigate('/', {
+                        state: {
+                            isLogin: json.isLogin
+                        }
+                    });
+                }
+                else {
+                    alert(json.isLogin);
+                }
+            });
+
     }
 
 
@@ -47,7 +54,7 @@ export default function Login() {
                 type='text'
                 placeholder="아이디 입력"
                 value={userId}
-                onChange={ e => {
+                onChange={e => {
                     setUserId(e.target.value);
                 }}>
             </input><br />
@@ -58,7 +65,7 @@ export default function Login() {
                 type='password'
                 placeholder="비밀번호 입력"
                 value={userPw}
-                onChange={ e => {
+                onChange={e => {
                     setUserPw(e.target.value);
                 }}>
             </input><br />

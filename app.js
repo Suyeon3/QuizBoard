@@ -49,7 +49,7 @@ app.post('/login', async(req,res) => {
                     // Todo: 입력된 비밀번호가 해시된 저장값과 같은지 비교
                     if (user.password === password) {
                         // Todo: 세션 정보 갱신으로 수정
-                        sendData.isLogin = "True";
+                        sendData.isLogin = true;
                         return res.send(sendData);
                     }
                     else {  // 아이디 일치한데 비밀번호 불일치
