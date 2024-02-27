@@ -1,3 +1,4 @@
+import socketIo from "../server";
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
@@ -28,10 +29,12 @@ export default function Login() {
             .then((res) => res.json())
             .then((json) => {
                 if (json.isLogin === true) {
-                    // alert("로그인 성공");
+                    socketIo.emit('login', userId, (res) => {
+                        console.log("Res", res)
+                    });
                     navigate('/', {
                         state: {
-                            isLogin: json.isLogin
+                            isLogin: json.isLogin,
                         }
                     });
                 }

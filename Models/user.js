@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: Image
 	}],
-	token: {
+	sid: {
 		type: String,	
 	},
     online: {
