@@ -1,0 +1,102 @@
+* { 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    padding-top: 40px;
+    padding-bottom: 27px;
+}
+
+.container {
+    background-color: #E9EFF7;
+    width: 534px;
+    height: 358px;
+    padding: 3rem 2.4rem 2.7rem 2.4rem;
+    margin-top: 0.8rem;
+    border-radius: 13px;
+}
+
+.loginWrap {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.inputWrap {
+    margin-bottom: 1.6rem;
+}
+
+.idInput {
+    border: none;
+    border-bottom: 0.05rem solid #D0D8E2;
+    border-top-left-radius: 13px;
+    border-top-right-radius: 13px;
+    height: 2.7rem;
+    padding: 0 1.4rem 0 1.4rem;
+    width: 100%;
+}
+
+.pwInput {
+    border: none;
+    border-top: 0.05rem solid #D0D8E2;
+    border-bottom-left-radius: 13px;
+    border-bottom-right-radius: 13px;
+    height: 2.7rem;
+    padding: 0 1.4rem 0 1.4rem;
+    width: 100%;
+}
+
+.loginBtn {
+    align-self: center;
+    border: none;
+    width: 100%;
+    height: 3.2rem;
+    background-color: #D0D8E2;
+    border-radius: 13px;
+}   
+
+.etcWrap {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 1.4rem;
+}
+
+.etcWrap li+li ::before{
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 12px;
+    width: 1px;
+    height: 12px;
+    color: black;
+}
+
+
+
+.findIdBtn {
+    border: none;
+    background-color: transparent;
+    margin: 0 1rem 0 1rem;
+}
+
+.findPwBtn {
+    border: none;
+    background-color: transparent;
+    margin: 0 1rem 0 1rem;
+}
+
+.SignUp {
+    border: none;
+    background-color: transparent;
+    margin: 0 1rem 0 1rem;
+}

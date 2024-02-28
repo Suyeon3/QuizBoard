@@ -2,6 +2,7 @@ import socketIo from "../server";
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from './Header';
+import styles from '../style/login.module.css';
 
 export default function Login() {
     const [userId, setUserId] = useState('');
@@ -50,35 +51,51 @@ export default function Login() {
 
     return (
         <div>
-            <Header page={'login'}/>
-            <div>
-                <h1>login</h1>
-            <label htmlFor='id'>ID</label>
-            <input
-                className="id"
-                name='id'
-                type='text'
-                placeholder="아이디 입력"
-                value={userId}
-                onChange={e => {
-                    setUserId(e.target.value);
-                }}>
-            </input><br />
-            <label htmlFor='pw'>PW</label>
-            <input
-                className="pw"
-                name='pw'
-                type='password'
-                placeholder="비밀번호 입력"
-                value={userPw}
-                onChange={e => {
-                    setUserPw(e.target.value);
-                }}>
-            </input><br />
-            <button onClick={handleLogin}>로그인</button>
-            <button>회원가입</button>
+            <Header page={'login'} />
+            <div className={styles.wrap}>
+                <h1 className={styles.title}>login</h1>
+                <div className={styles.container}>
+                    <div className={styles.loginWrap}>
+                        <div className={styles.inputWrap}>
+                            <input
+                            className={styles.idInput}
+                            name='id'
+                            type='text'
+                            placeholder="아이디 입력"
+                            value={userId}
+                            onChange={e => {
+                                setUserId(e.target.value);
+                            }}>
+                        </input><br />
+                        <input
+                            className={styles.pwInput}
+                            name='pw'
+                            type='password'
+                            placeholder="비밀번호 입력"
+                            value={userPw}
+                            onChange={e => {
+                                setUserPw(e.target.value);
+                            }}>
+                        </input><br />
+                        </div>
+                        
+                        <button
+                            onClick={handleLogin}
+                            className={styles.loginBtn}>
+                        로그인
+                        </button>
+                    </div>
+
+                    <ul className={styles.etcWrap}>
+                        <button className={styles.findIdBtn}>아이디 찾기</button>
+                        <button className={styles.findPwBtn}>비밀번호 찾기</button>
+                        <button className={styles.SignUp}>회원가입</button>
+                    </ul>
+
+                </div>
+
             </div>
-            
+
         </div>
 
     )
