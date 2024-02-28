@@ -1,0 +1,30 @@
+* { 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 7rem;
+    height: 2rem;
+    object-fit: contain;
+    margin-left: 1.3rem;
+    margin-top: 0.83rem;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+}
+
+.login {
+    background-color:transparent;
+    border:none;
+    margin-right: 1.3rem;
+    margin-top: 0.83rem;
+}

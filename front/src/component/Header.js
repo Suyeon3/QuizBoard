@@ -1,20 +1,27 @@
 import LoginBtn from "./LoginBtn";
 import SignInBtn from "./SignInBtn";
-import styles from '../style/home.module.css'
+import { Link } from 'react-router-dom';
+import Logo from '../img/Logo.png';
+import styles from '../style/header.module.css'
 
 export default function Header({ page }) {
 
     if (page === 'home') {
         return (
             <div className={styles.header}>
-                <button>home</button>
-                <LoginBtn />
+                <Link to='/'><img src={Logo} className={styles.logo}/></Link>
+                <div className={styles.menu}>
+                    <LoginBtn />
+                    <SignInBtn />  
+                </div>
+                
             </div>
         )
     }
     else if (page === 'login') {
         return (
             <div className={styles.header}>
+                <img src={Logo} className={styles.logo} />
                 <SignInBtn />
             </div>
         )

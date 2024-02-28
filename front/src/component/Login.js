@@ -1,6 +1,7 @@
 import socketIo from "../server";
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import Header from './Header';
 
 export default function Login() {
     const [userId, setUserId] = useState('');
@@ -49,7 +50,9 @@ export default function Login() {
 
     return (
         <div>
-            <h1>login</h1>
+            <Header page={'login'}/>
+            <div>
+                <h1>login</h1>
             <label htmlFor='id'>ID</label>
             <input
                 className="id"
@@ -74,6 +77,8 @@ export default function Login() {
             </input><br />
             <button onClick={handleLogin}>로그인</button>
             <button>회원가입</button>
+            </div>
+            
         </div>
 
     )

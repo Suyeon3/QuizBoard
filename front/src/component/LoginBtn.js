@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import styles from '../style/home.module.css';
+import styles from '../style/header.module.css';
 
 export default function LoginBtn() {
     const location = useLocation();
@@ -14,9 +14,9 @@ export default function LoginBtn() {
     return (
         <div className='login'>
             {isLogin ? (
-                <button onClick={handleLogout}>로그아웃</button>
+                <button onClick={handleLogout} className={styles.login}>로그아웃</button>
             ) : (
-                <Link to='/login'><button>로그인</button></Link>
+                <Link to='/login'><button className={styles.login}>로그인</button></Link>
             )
             }
         </div>
