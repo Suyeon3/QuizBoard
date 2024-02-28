@@ -21,7 +21,7 @@ export default function Header({ page }) {
     else if (page === 'login') {
         return (
             <div className={styles.header}>
-                <img src={Logo} className={styles.logo} />
+                 <Link to='/'><img src={Logo} className={styles.logo}/></Link>
                 <SignInBtn />
             </div>
         )
