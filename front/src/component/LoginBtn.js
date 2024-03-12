@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { LoginContext } from '../context/LoginContext';
 import styles from '../style/header.module.css';
 
-export default function LoginBtn({ isLogin, handleLogout }) {
+export default function LoginBtn() {
+    const { isLogin, handleLogout } = useContext(LoginContext);
 
     return (
         <div className='login'>
