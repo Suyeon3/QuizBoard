@@ -2,14 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import styles from '../style/header.module.css';
 
-export default function LoginBtn() {
-    const location = useLocation();
-    console.log(location.state)
-    const [isLogin, setIsLogin] = useState(location.state?.isLogin);
-
-    function handleLogout() {
-        setIsLogin(!isLogin);
-    }
+export default function LoginBtn({ isLogin, handleLogout }) {
 
     return (
         <div className='login'>

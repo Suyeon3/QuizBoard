@@ -8,6 +8,11 @@ import styles from '../style/home.module.css';
 
 
 export default function Home() {
+    const location = useLocation();
+    const [isLogin, setIsLogin] = useState(location.state?.isLogin);
+    function handleLogout() {
+        setIsLogin(!isLogin);
+    }
 
     // Todo: 방 생성하기 누르면 '방입력하기' 란으로 바뀌기, 서버에 방 조인 요청
 
@@ -19,7 +24,7 @@ export default function Home() {
 
     return (
         <div>
-            <Header page={'home'} />
+            <Header page={'home'} isLogin={isLogin} handleLogout={handleLogout}/>
             <div className={styles.container}>
                 <div className={styles.logoWrap}>
                     <img src={LogoImg} className={styles.logoImg}/>

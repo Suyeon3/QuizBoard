@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import Logo from '../img/Logo.png';
 import styles from '../style/header.module.css'
 
-export default function Header({ page }) {
+export default function Header({ page, isLogin, handleLogout }) {
 
     if (page === 'home') {
         return (
             <div className={styles.header}>
                 <Link to='/'><img src={Logo} className={styles.logo}/></Link>
                 <div className={styles.menu}>
-                    <LoginBtn />
+                    <LoginBtn isLogin={isLogin} handleLogout={handleLogout}/>
                     <SignInBtn />  
                 </div>
                 
