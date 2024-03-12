@@ -1,8 +1,9 @@
 import socketIo from "./server";
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './component/Home';
 import Login from './component/Login';
 import { useEffect, useState } from 'react';
+import { LoginProvider } from "./context/LoginContext";
 
 function App() {
   /*
@@ -38,14 +39,14 @@ function App() {
     })
   }, [socket])
 */
-  
+
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Home/>}></Route>
-          <Route path='/login' element={<Login/>}></Route>
-        </Routes>
+          <Routes>
+            <Route path='/' element={<Home />}></Route>
+            <Route path='/login' element={<Login />}></Route>
+          </Routes>
       </BrowserRouter>
     </div>
   );

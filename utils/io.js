@@ -17,6 +17,15 @@ module.exports = function(io) {
             
         })
 
+        socket.on('createRoom', async(roomName) => {
+            try {
+                console.log(`${socket.id} created ${roomName} room.`);
+                socket.join(roomName);
+            } catch(error) {
+                cb();
+            }
+        })
+
         socket.on('enterRoom', async(msg, done) => {
             try {
                 console.log(msg);

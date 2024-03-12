@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { LoginContext } from '../context/LoginContext';
 import styles from '../style/header.module.css';
