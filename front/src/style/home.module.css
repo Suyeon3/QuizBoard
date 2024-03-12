@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    margin-bottom: 3rem;
+}
+
+.logoWrap {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    width: 13rem;
+    height: 3rem;
+    object-fit: contain;
+}
+
+.logoImg {
+    width: 15.2rem;
+    height: 14rem;
+    object-fit: contain;
+}
+
+.btnWrap {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.createRoom {
+    width: 20rem;
+    padding: 1rem;
+    margin-bottom: 0.45rem;
+    background: #E9EFF7;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.enterRoom {
+    width: 20rem;
+    padding: 1rem;
+    background: #E9EFF7;
+    border-radius: 20px;
+    text-align: center;
+}

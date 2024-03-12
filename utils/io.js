@@ -17,6 +17,17 @@ module.exports = function(io) {
             
         })
 
+        socket.on('enterRoom', async(msg, done) => {
+            try {
+                console.log(msg);
+                //Todo: db에서 입장가능한 방 찾기
+                // socket.join(방금 찾은 방)
+                done();
+            } catch(error) {
+                cb()
+            }
+        })
+
         socket.on('disconnect', () => {
             console.log('user is disconnected')
         })
