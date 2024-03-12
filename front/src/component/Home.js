@@ -3,13 +3,13 @@ import Header from './Header';
 import Logo from '../img/Logo.png';
 import LogoImg from '../img/LogoImage.png';
 import styles from '../style/home.module.css';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LoginProvider } from "../context/LoginContext";
 import { useState } from "react";
 
 export default function Home() {
     const location = useLocation();
-    // Todo: 방 생성하기 누르면 '방입력하기' 란으로 바뀌기, 서버에 방 조인 요청
+    const navigate = useNavigate();
     const [isInputShown, setInputShown] = useState(false);
     const [roomName, setRoomName] = useState('');
 
@@ -29,7 +29,9 @@ export default function Home() {
         if (e.keyCode === 13) {
             socketIo.emit('createRoom', e.target.value, () => {
                 console.log('server is done');
-            })
+            });
+            navigate('/room')
+            setInputShown(false);
         }
     }
 

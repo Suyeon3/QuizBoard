@@ -17,10 +17,11 @@ module.exports = function(io) {
             
         })
 
-        socket.on('createRoom', async(roomName) => {
+        socket.on('createRoom', async(roomName, done) => {
             try {
                 console.log(`${socket.id} created ${roomName} room.`);
                 socket.join(roomName);
+                done();
             } catch(error) {
                 cb();
             }
