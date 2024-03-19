@@ -31,7 +31,7 @@ const io = new Server(httpServer, {
 
 require("./utils/io")(io);
 const User = require('./Models/user');
-
+const Room = require('./Models/room');
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'front', 'public', 'index.html'));
@@ -41,7 +41,8 @@ app.post('/login', async (req, res) => {
     const username = req.body.userId;
     const password = req.body.userPw;
     const sendData = {
-        isLogin: undefined
+        isLogin: undefined,
+        userName: undefined
     };
 
     try {
@@ -52,6 +53,7 @@ app.post('/login', async (req, res) => {
                 if (user.password === password) {
                     // Todo: 세션 정보 갱신으로 수정
                     sendData.isLogin = true;
+                    sendData.userName = username;
 
                     return res.send(sendData);
                 }

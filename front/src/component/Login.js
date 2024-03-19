@@ -37,6 +37,7 @@ export default function Login() {
                     navigate('/', {
                         state: {
                             isLogin: json.isLogin,
+                            userName: json.userName
                         }
                     });
                 }

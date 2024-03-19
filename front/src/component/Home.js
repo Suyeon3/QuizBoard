@@ -10,6 +10,7 @@ import { useState } from "react";
 export default function Home() {
     const location = useLocation();
     const navigate = useNavigate();
+    const [userName, setUserName] = useState(location.state?.userName);
     const [isInputShown, setInputShown] = useState(false);
     const [roomName, setRoomName] = useState('');
 
@@ -20,18 +21,18 @@ export default function Home() {
             alert('비회원은 방 생성이 불가합니다.');
         }
     }
-
     function handleRoomName(e) {
         setRoomName(e.target.value);
     }
 
     function createRoomName(e) {
         if (e.keyCode === 13) {
-            socketIo.emit('createRoom', e.target.value, () => {
+            socketIo.emit('createRoom', {roomName: `${e.target.value}`, userId: `${userName}`}, () => {
                 console.log('server is done');
             });
             navigate('/room')
             setInputShown(false);
+            setRoomName('');
         }
     }
 

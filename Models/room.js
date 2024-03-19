@@ -15,7 +15,10 @@ const roomSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: User
     }],
-    status
+    status: {
+        type: Boolean,
+        default: true,
+    }
 })
 
 roomSchema.set('timestamps', true);
