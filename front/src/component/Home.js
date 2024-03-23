@@ -30,7 +30,9 @@ export default function Home() {
             socketIo.emit('createRoom', { roomName: `${e.target.value}`, userId: `${userName}` }, () => {
                 navigate('/room', {
                     state: {
-                        roomName: e.target.value
+                        roomName: e.target.value,
+                        userId: userName,
+                        host: userName
                     }
                 });
             });
@@ -50,7 +52,8 @@ export default function Home() {
             try {
                 navigate('/room', {
                     state: {
-                        roomName: roomName
+                        roomName: roomName,
+                        userId: userName
                     }
                 });
             } catch (error) {

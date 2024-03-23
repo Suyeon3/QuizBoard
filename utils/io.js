@@ -63,13 +63,19 @@ module.exports = function (io) {
             console.log('서버에서 sendRoomName 실행됨');
         }
 
-        socket.on('leaveRoom', async (roomName) => {
+        socket.on('hostLeaveRoom', async (roomName) => {
             socket.leave(roomName);
             console.log(`${socket.id}가 ${roomName}을 나감`);
-            const room = await Room.findOne({roomName: roomName});
+            await Room.deleteOne({ roomName: roomName });
+        }) 
+
+        socket.on('guestLeaveRoom', async (roomName) => {
+            socket.leave(roomName);
+            console.log(`${socket.id}가 ${roomName}을 나감`);
+            const room = await Room.findOne({ roomName: roomName });
             const {allMembers} = room;
             const newMembers = allMembers.filter(member => member !== socket.id);
-            await Room.updateOne({roomName: roomName}, {allMembers: newMembers});
+            await Room.updateOne({ roomName: roomName }, { allMembers: newMembers });
         })
 
         socket.on('disconnect', () => {
