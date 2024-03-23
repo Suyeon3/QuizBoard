@@ -13,6 +13,9 @@ export default function Room() {
         return () => {
             console.log(`${roomName}에서 나감`);
             if (host) {
+                if (host !== userId) {
+                    socketIo.emit('guestLeaveRoom', roomName);
+                }
                 socketIo.emit('hostLeaveRoom', roomName);
             }
             else {
