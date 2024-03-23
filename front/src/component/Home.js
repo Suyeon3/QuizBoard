@@ -5,7 +5,7 @@ import LogoImg from '../img/LogoImage.png';
 import styles from '../style/home.module.css';
 import { useLocation, useNavigate } from "react-router-dom";
 import { LoginProvider } from "../context/LoginContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
     const location = useLocation();
@@ -27,20 +27,39 @@ export default function Home() {
 
     function createRoomName(e) {
         if (e.keyCode === 13) {
-            socketIo.emit('createRoom', {roomName: `${e.target.value}`, userId: `${userName}`}, () => {
-                console.log('server is done');
+            socketIo.emit('createRoom', { roomName: `${e.target.value}`, userId: `${userName}` }, () => {
+                navigate('/room', {
+                    state: {
+                        roomName: e.target.value
+                    }
+                });
             });
-            navigate('/room')
             setInputShown(false);
             setRoomName('');
         }
     }
 
     function enterRoom() {
-        socketIo.emit('enterRoom', { msg: `${socketIo.id} enters room` }, () => {
-            console.log('server is done');
+        socketIo.emit('enterRoom', { msg: `${userName} enters room` }, () => {
+            receiveRoomName();
         })
     }
+
+    function receiveRoomName() {
+        socketIo.on('sendRoomName', (roomName) => {
+            try {
+                navigate('/room', {
+                    state: {
+                        roomName: roomName
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        })
+    }
+
+
 
     return (
         <LoginProvider>

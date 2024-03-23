@@ -11,10 +11,11 @@ const roomSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: User
     },
-    members: [{
+    registeredMembers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: User
     }],
+    allMembers: [String],
     status: {
         type: Boolean,
         default: true,

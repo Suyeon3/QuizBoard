@@ -18,15 +18,17 @@ module.exports = function (io) {
 
         })
 
-        socket.on('createRoom', async(data, done) => {
+        socket.on('createRoom', async (data, done) => {
             try {
-                console.log(`${socket.id} created ${data.roomName} room.`);
+                console.log(`${data.userId} created ${data.roomName} room.`);
+                const user = await User.findOne({ userId: data.userId });
                 socket.join(data.roomName);
-                const user = await User.findOne({userId : data.userId});
-                console.log(user._id);
+                console.log(socket)
                 await Room.create({
                     roomName: data.roomName,
                     host: user._id,
+                    registeredMembers: [user._id],
+                    allMembers: [socket.id],
                     status: true,
                 });
                 console.log('db에 룸 정보 저장');
@@ -36,15 +38,38 @@ module.exports = function (io) {
             }
         })
 
-        socket.on('enterRoom', async (msg, done) => {
+        socket.on('enterRoom', async (msg, cb) => {
             try {
                 console.log(msg);
-                //Todo: db에서 입장가능한 방 찾기
-                // socket.join(방금 찾은 방)
-                done();
-            } catch (error) {
+                const rooms = await Room.aggregate([{ $match: { status: true } }, { $sample: { size: 1 } }]);
+                if (rooms.length > 0) {
+                    const room = rooms[0];
+                    socket.join(room.roomName);
+                    console.log(socket.adapter.rooms);
+                    await Room.updateOne({ _id: room._id }, { $push: { allMembers: socket.id } });
+                    sendRoomName(room.roomName);
+                } else {
+                    console.log('No rooms available.');
+                }
                 cb()
+            } catch (error) {
+                console.log(error.message)
+                cb({ ok: false, error: error.message })
             }
+        })
+
+        function sendRoomName(roomName) {
+            socket.emit('sendRoomName', roomName);
+            console.log('서버에서 sendRoomName 실행됨');
+        }
+
+        socket.on('leaveRoom', async (roomName) => {
+            socket.leave(roomName);
+            console.log(`${socket.id}가 ${roomName}을 나감`);
+            const room = await Room.findOne({roomName: roomName});
+            const {allMembers} = room;
+            const newMembers = allMembers.filter(member => member !== socket.id);
+            await Room.updateOne({roomName: roomName}, {allMembers: newMembers});
         })
 
         socket.on('disconnect', () => {
