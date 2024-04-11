@@ -78,6 +78,13 @@ module.exports = function (io) {
             await Room.updateOne({ roomName: roomName }, { allMembers: newMembers });
         })
 
+        socket.on('stopDraw', async (roomName, position) => {
+            io.to(roomName).emit('stopDraw', position.mouseX, position.mouseY);
+        })
+        socket.on('startDraw', async (roomName, position) => {
+            io.to(roomName).emit('startDraw', position.mouseX, position.mouseY);
+        })
+
         socket.on('disconnect', () => {
             console.log('user is disconnected')
         })
