@@ -1,30 +1,40 @@
 import { useEffect, useState, useRef } from 'react';
+import styles from '../style/canvas.module.css';
 
 export default function PlayingGame(props) {
-
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const [painting, setPainting] = useState(false);
 
-    const socket = props.socket;
-    const roomName = props.roomName;
-    const host = props.host;
-    const userId = props.userId;
+    const {socket, roomName, host, userId} = props;
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const width = window.innerWidth - 20;
-        const height = window.innerHeight - 120;
-        canvas.width = width;
-        canvas.height = height;
-        canvas.style.border = '3px double';
         const ctx = canvas.getContext('2d');
+        
+        function handleSize() {
+            const { width, height } = canvas.getBoundingClientRect();
+            const newCanvas = document.createElement('canvas');
+            newCanvas.width = width;
+            newCanvas.height = height;
+            const newCtx = newCanvas.getContext('2d');
+            newCtx.drawImage(canvas, 0, 0);
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            ctx.drawImage(newCanvas, 0, 0);
+        }
+        
+        handleSize();
+        
+        window.addEventListener('resize', handleSize);
+        
         ctx.lineJoin = 'round';
         ctx.lineWidth = 2.5;
         ctx.strokeStyle = 'black';
         ctxRef.current = ctx;
 
-        return() => {
+        return () => {
+            window.removeEventListener('resize', handleSize);
             if (host) {
                 if (host !== userId) {
                     socket.emit('guestLeaveRoom', roomName);
@@ -42,7 +52,7 @@ export default function PlayingGame(props) {
         socket.on('stopDraw', (mouseX, mouseY) => {
             const ctx = ctxRef.current;
             ctx.beginPath();
-            ctx.moveTo(mouseX, mouseY);
+            ctx.moveTo(mouseX, mouseY);;
         });
         socket.on('startDraw', (mouseX, mouseY) => {
             const ctx = ctxRef.current;
@@ -69,9 +79,10 @@ export default function PlayingGame(props) {
 
     return (
         <div>
-            <div >
+            <div>
                 <canvas
                     ref={canvasRef}
+                    className={styles.canvas}
                     onMouseDown={() => setPainting(true)}
                     onMouseUp={() => setPainting(false)}
                     onMouseMove={e => drawFn(e)}
