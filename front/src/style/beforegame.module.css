@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #D7E8FF;
+}
+
+.container {
+    margin-bottom: 3rem;
+}
+
+.logoWrap {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    width: 13rem;
+    height: 3rem;
+    object-fit: contain;
+}
+
+.logoImg {
+    width: 15.2rem;
+    height: 14rem;
+    object-fit: contain;
+}
+
+.btnWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.startBtn {
+    width: 20rem;
+    padding: 1rem;
+    background: #E9EFF7;
+    border-radius: 20px;
+    text-align: center;
+}

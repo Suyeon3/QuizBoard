@@ -1,9 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import styles from '../style/canvas.module.css';
+import Brush from '../img/brush.png';
+import Eraser from '../img/eraser.png';
+import Reset from '../img/reset.png';
 
 export default function PlayingGame(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
+    const colorRef = useRef('black');
     const [painting, setPainting] = useState(false);
 
     const {socket, roomName, host, userId} = props;
@@ -11,7 +15,7 @@ export default function PlayingGame(props) {
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-        
+        // virtual screen
         function handleSize() {
             const { width, height } = canvas.getBoundingClientRect();
             const newCanvas = document.createElement('canvas');
@@ -22,6 +26,9 @@ export default function PlayingGame(props) {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             ctx.drawImage(newCanvas, 0, 0);
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 2.5;
+            ctx.current = ctx;
         }
         
         handleSize();
@@ -30,22 +37,13 @@ export default function PlayingGame(props) {
         
         ctx.lineJoin = 'round';
         ctx.lineWidth = 2.5;
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = colorRef.current;
         ctxRef.current = ctx;
 
         return () => {
             window.removeEventListener('resize', handleSize);
-            if (host) {
-                if (host !== userId) {
-                    socket.emit('guestLeaveRoom', roomName);
-                }
-                socket.emit('hostLeaveRoom', roomName);
-            }
-            else {
-                socket.emit('guestLeaveRoom', roomName);
-            }
         }
-    }, []);
+    }, [props]);
 
     useEffect(() => {
         if (!socket) return;
@@ -77,9 +75,50 @@ export default function PlayingGame(props) {
         }
     };
 
+    function setColor(e) {
+        const ctx = ctxRef.current;
+        const color = e.target.getAttribute('data-color');
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctxRef.current = ctx;
+    }
+
+    function setEraser() {
+        const ctx = ctxRef.current;
+        const color = '#F2F7FF';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 7;
+        ctxRef.current = ctx;
+    }
+
+    function setReset() {
+        const canvas = canvasRef.current;
+        const { width, height } = canvas.getBoundingClientRect();
+        const ctx = ctxRef.current;
+        ctx.fillStyle = '#F2F7FF'
+        ctx.fillRect(0, 0, width, height);
+    }
+
     return (
         <div>
-            <div>
+            <div className={styles.sidebar}>
+                <div className={styles.tools}>
+                    <img id={styles.tool} data-tool='brush' src={Brush} />
+                    <img id={styles.tool} data-tool='eraser' src={Eraser} onClick={setEraser}/>
+                    <img id={styles.tool} data-tool='reset' src={Reset} onClick={setReset}/>
+                </div>
+                <div className={styles.colors} onClick={setColor}>
+                    <div id={styles.color} data-color='black'></div>
+                    <div id={styles.color} data-color='red'></div>
+                    <div id={styles.color} data-color='orange'></div>
+                    <div id={styles.color} data-color='yellow'></div>
+                    <div id={styles.color} data-color='green'></div>
+                    <div id={styles.color} data-color='blue'></div>
+                    <div id={styles.color} data-color='purple'></div>
+                    <div id={styles.color} data-color='white'></div>
+                </div>
+            </div>
+            <div className={styles.canvasWrap}>
                 <canvas
                     ref={canvasRef}
                     className={styles.canvas}

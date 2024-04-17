@@ -21,6 +21,7 @@ export default function Home() {
             alert('비회원은 방 생성이 불가합니다.');
         }
     }
+    
     function handleRoomName(e) {
         setRoomName(e.target.value);
     }

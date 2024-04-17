@@ -1,5 +1,95 @@
-
 .canvas {
-    background: #eee;
+    background: #F2F7FF;
     display: block;
+}
+
+.sidebar {
+    background: #FFFFFF;
+    position: absolute;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    left: 30px;
+    top: 16vh;
+    width: 75px;
+    height: 68vh;
+    border-radius: 13px;
+    overflow: scroll;
+}
+
+.tools {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 12px 0 0 0;
+}
+
+#tool {
+    object-fit: contain;
+}
+
+#tool[data-tool='brush'] {
+    width: 50px;
+    height: 50px;
+}
+
+#tool[data-tool='eraser'] {
+    width: 50px;
+    height: 50px;
+}
+
+#tool[data-tool='reset'] {
+    width: 40px;
+    height: 40px;
+}
+
+.colors {
+    margin: 12px 0;
+}
+
+#color {
+    width: 37px;
+    height: 37px;
+    border-radius: 50px;
+    margin-bottom: 4px;
+    border-style: solid;
+    border-color: #eee;
+}
+
+#color[data-color='black'] {
+    background-color: black;
+}
+
+#color[data-color='red'] {
+    background-color: red;
+}
+
+
+#color[data-color='orange'] {
+    background-color: orange;
+}
+
+
+#color[data-color='yellow'] {
+    background-color: yellow;
+}
+
+
+#color[data-color='green'] {
+    background-color: green;
+}
+
+#color[data-color='blue'] {
+    background-color: blue;
+}
+
+#color[data-color='purple'] {
+    background-color: purple;
+}
+
+#color[data-color='white'] {
+    background-color: white;
 }

@@ -51,6 +51,10 @@ export default function Room() {
                 />
                 :
                 <BeforeGame
+                    socket={socketIo}
+                    roomName={roomName}
+                    host={host}
+                    userId={userId}
                     handleStartGame={handleStartGame}
                 />
             }
