@@ -85,6 +85,10 @@ module.exports = function (io) {
             io.to(roomName).emit('startDraw', position.mouseX, position.mouseY);
         })
 
+        socket.on('changeColor', async (roomName, color) => {
+            io.to(roomName).emit('changeColor', color);
+        })
+
         socket.on('disconnect', () => {
             console.log('user is disconnected')
         })

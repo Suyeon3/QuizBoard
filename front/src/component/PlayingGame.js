@@ -7,15 +7,16 @@ import Reset from '../img/reset.png';
 export default function PlayingGame(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
-    const colorRef = useRef('black');
+    // const colorRef = useRef('black');   
     const [painting, setPainting] = useState(false);
+    const [currentColor, setCurrentColor] = useState('black');
 
     const {socket, roomName, host, userId} = props;
 
     useEffect(() => {
         const canvas = canvasRef.current; 
-        const ctx = canvas.getContext('2d');    // 여기가 초기화..?
-        // virtual screen
+        const ctx = canvas.getContext('2d');    // 여기가 초기화
+        // Todo: virtual screen
         function handleSize() {
             //재조정된 width, height
             const { width, height } = canvas.getBoundingClientRect();
@@ -31,7 +32,7 @@ export default function PlayingGame(props) {
 
             ctx.lineJoin = 'round';
             ctx.lineWidth = 2.5;
-            ctx.strokeStyle = colorRef.current;
+            ctx.strokeStyle = currentColor;
             ctxRef.current = ctx;
         }
         
@@ -75,12 +76,20 @@ export default function PlayingGame(props) {
     };
 
     function setColor(e) {
+        const newColor = e.target.getAttribute('data-color');
+        setCurrentColor(newColor);
+    }
+
+    useEffect(() => {
+        socket.emit('changeColor', roomName, currentColor);
+    }, [currentColor])
+
+    socket.on('changeColor', (newColor) => {
         const ctx = ctxRef.current;
-        const color = e.target.getAttribute('data-color');
-        ctx.strokeStyle = color;
+        ctx.strokeStyle = newColor;
         ctx.lineWidth = 2.5;
         ctxRef.current = ctx;
-    }
+    })
 
     function setEraser() {
         const ctx = ctxRef.current;
