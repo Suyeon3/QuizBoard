@@ -13,32 +13,31 @@ export default function PlayingGame(props) {
     const {socket, roomName, host, userId} = props;
 
     useEffect(() => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const canvas = canvasRef.current; 
+        const ctx = canvas.getContext('2d');    // 여기가 초기화..?
         // virtual screen
         function handleSize() {
+            //재조정된 width, height
             const { width, height } = canvas.getBoundingClientRect();
             const newCanvas = document.createElement('canvas');
             newCanvas.width = width;
             newCanvas.height = height;
             const newCtx = newCanvas.getContext('2d');
-            newCtx.drawImage(canvas, 0, 0);
+            newCtx.drawImage(canvas, 0, 0); // 기존 canvas 복사
+
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            ctx.drawImage(newCanvas, 0, 0);
+            ctx.drawImage(newCanvas, 0, 0); // 복사본 초기화된 ctx에 그리기
+
             ctx.lineJoin = 'round';
             ctx.lineWidth = 2.5;
-            ctx.current = ctx;
+            ctx.strokeStyle = colorRef.current;
+            ctxRef.current = ctx;
         }
         
         handleSize();
         
         window.addEventListener('resize', handleSize);
-        
-        ctx.lineJoin = 'round';
-        ctx.lineWidth = 2.5;
-        ctx.strokeStyle = colorRef.current;
-        ctxRef.current = ctx;
 
         return () => {
             window.removeEventListener('resize', handleSize);
