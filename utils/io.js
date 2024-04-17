@@ -81,12 +81,17 @@ module.exports = function (io) {
         socket.on('stopDraw', async (roomName, position) => {
             io.to(roomName).emit('stopDraw', position.mouseX, position.mouseY);
         })
+
         socket.on('startDraw', async (roomName, position) => {
             io.to(roomName).emit('startDraw', position.mouseX, position.mouseY);
         })
 
         socket.on('changeColor', async (roomName, color) => {
             io.to(roomName).emit('changeColor', color);
+        })
+
+        socket.on('reset', async (roomName, resetFillColor) => {
+            io.to(roomName).emit('reset', resetFillColor);
         })
 
         socket.on('disconnect', () => {

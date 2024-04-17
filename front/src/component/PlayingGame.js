@@ -7,7 +7,6 @@ import Reset from '../img/reset.png';
 export default function PlayingGame(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
-    // const colorRef = useRef('black');   
     const [painting, setPainting] = useState(false);
     const [currentColor, setCurrentColor] = useState('black');
 
@@ -97,12 +96,17 @@ export default function PlayingGame(props) {
     }
 
     function setReset() {
+        const resetFillColor = '#F2F7FF';
+        socket.emit('reset', roomName, resetFillColor);
+    }
+
+    socket.on('reset', (resetFillColor) => {
         const canvas = canvasRef.current;
         const { width, height } = canvas.getBoundingClientRect();
         const ctx = ctxRef.current;
-        ctx.fillStyle = '#F2F7FF'
+        ctx.fillStyle = resetFillColor;
         ctx.fillRect(0, 0, width, height);
-    }
+    })
 
     return (
         <div>
