@@ -92,11 +92,8 @@ export default function PlayingGame(props) {
     })
 
     function setEraser() {
-        const ctx = ctxRef.current;
-        const color = '#F2F7FF';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 7;
-        ctxRef.current = ctx;
+        const eraserColor = '#F2F7FF';
+        setCurrentColor(eraserColor);
     }
 
     function setReset() {
