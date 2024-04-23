@@ -23,13 +23,13 @@ module.exports = function (io) {
                 console.log(`${data.userId} created ${data.roomName} room.`);
                 const user = await User.findOne({ userId: data.userId });
                 socket.join(data.roomName);
-                console.log(socket)
+                // console.log(socket)
                 await Room.create({
                     roomName: data.roomName,
                     host: user._id,
                     registeredMembers: [user._id],
                     allMembers: [socket.id],
-                    status: true,
+                    status: false,
                 });
                 console.log('db에 룸 정보 저장');
                 done();
@@ -41,11 +41,11 @@ module.exports = function (io) {
         socket.on('enterRoom', async (msg, cb) => {
             try {
                 console.log(msg);
-                const rooms = await Room.aggregate([{ $match: { status: true } }, { $sample: { size: 1 } }]);
+                const rooms = await Room.aggregate([{ $match: { status: false } }, { $sample: { size: 1 } }]);
                 if (rooms.length > 0) {
                     const room = rooms[0];
                     socket.join(room.roomName);
-                    console.log(socket.adapter.rooms);
+                    // console.log(socket.adapter.rooms);
                     await Room.updateOne({ _id: room._id }, { $push: { allMembers: socket.id } });
                     sendRoomName(room.roomName);
                 } else {
@@ -64,7 +64,7 @@ module.exports = function (io) {
         }
 
         socket.on('hostLeaveRoom', async (roomName) => {
-            socket.leave(roomName);
+            io.socketsLeave(roomName);
             console.log(`${socket.id}가 ${roomName}을 나감`);
             await Room.deleteOne({ roomName: roomName });
         }) 
@@ -76,6 +76,11 @@ module.exports = function (io) {
             const {allMembers} = room;
             const newMembers = allMembers.filter(member => member !== socket.id);
             await Room.updateOne({ roomName: roomName }, { allMembers: newMembers });
+        })
+
+        socket.on('startGame', async (roomName, startGameState) => {
+            await Room.updateOne({ roomName: roomName }, { status: true });
+            socket.to(roomName).emit('startGame', startGameState);
         })
 
         socket.on('stopDraw', async (roomName, position) => {

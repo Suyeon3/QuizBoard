@@ -31,7 +31,7 @@ export default function PlayingGame(props) {
 
             ctx.lineJoin = 'round';
             ctx.lineWidth = 2.5;
-            ctx.strokeStyle = currentColor;
+            ctx.strokeStyle = currentColor; //Todo: currentColor도 broadCast되도록(근데 안 해도 될지도??)
             ctxRef.current = ctx;
         }
         
@@ -63,6 +63,10 @@ export default function PlayingGame(props) {
 
     }, [socket, painting]);
 
+    useEffect(() => {
+        socket.emit('changeColor', roomName, currentColor);
+    }, [currentColor]);
+
     function drawFn(e) {
         const mouseX = e.nativeEvent.offsetX;
         const mouseY = e.nativeEvent.offsetY;
@@ -78,10 +82,6 @@ export default function PlayingGame(props) {
         const newColor = e.target.getAttribute('data-color');
         setCurrentColor(newColor);
     }
-
-    useEffect(() => {
-        socket.emit('changeColor', roomName, currentColor);
-    }, [currentColor])
 
     socket.on('changeColor', (newColor) => {
         const ctx = ctxRef.current;

@@ -18,7 +18,7 @@ const roomSchema = new mongoose.Schema({
     allMembers: [String],
     status: {
         type: Boolean,
-        default: true,
+        default: false,
     }
 })
 

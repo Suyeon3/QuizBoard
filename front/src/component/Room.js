@@ -18,9 +18,6 @@ export default function Room() {
         return () => {
             console.log(`${roomName}에서 나감`);
             if (host) {
-                if (host !== userId) {
-                    socketIo.emit('guestLeaveRoom', roomName);
-                }
                 socketIo.emit('hostLeaveRoom', roomName);
             }
             else {
@@ -36,9 +33,24 @@ export default function Room() {
         }
     }, [roomName]);
 
+    useEffect(() => {
+        if (startGame) {
+            socketIo.emit('startGame', roomName, startGame);
+        }
+    }, [startGame]);
+
     function handleStartGame() {
-        setStartGame(true);
+        if(host) {
+            setStartGame(true);
+        }
+        else {
+            alert('호스트만 게임을 시작할 수 있습니다.');
+        }
     }
+
+    socketIo.on('startGame', (startGameState) => {
+        setStartGame(startGameState);
+    })
 
     return (
         <div>
