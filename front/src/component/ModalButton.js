@@ -3,7 +3,8 @@ import { useState } from "react";
 import styles from '../style/modal.module.css';
 import BackButton from '../img/backButton.png';
 
-export default function ModalButton() {
+export default function ModalButton(props) {
+    const { handlePlayGame } = props;
     const [modalOpen, setModalOpen] = useState(false);
 
     function handleCloseModal() {
@@ -11,7 +12,7 @@ export default function ModalButton() {
     }
 
     function handleLeaveGame() {
-        console.log('게임 나가기');
+        handlePlayGame();
     }
 
     return (

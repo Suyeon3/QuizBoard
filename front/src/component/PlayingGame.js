@@ -11,10 +11,10 @@ export default function PlayingGame(props) {
     const [painting, setPainting] = useState(false);
     const [currentColor, setCurrentColor] = useState('black');
 
-    const {socket, roomName, host, userId} = props;
+    const { socket, roomName, host, userId, handlePlayGame } = props;
 
     useEffect(() => {
-        const canvas = canvasRef.current; 
+        const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');    // 여기가 초기화
         // Todo: virtual screen
         function handleSize() {
@@ -35,9 +35,9 @@ export default function PlayingGame(props) {
             ctx.strokeStyle = currentColor; //Todo: currentColor도 broadCast되도록(근데 안 해도 될지도??)
             ctxRef.current = ctx;
         }
-        
+
         handleSize();
-        
+
         window.addEventListener('resize', handleSize);
 
         return () => {
@@ -111,8 +111,10 @@ export default function PlayingGame(props) {
 
     return (
         <div>
-            
-            <ModalButton />
+
+            <ModalButton
+                handlePlayGame={handlePlayGame}
+            />
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />

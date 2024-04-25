@@ -78,9 +78,9 @@ module.exports = function (io) {
             await Room.updateOne({ roomName: roomName }, { allMembers: newMembers });
         })
 
-        socket.on('startGame', async (roomName, startGameState) => {
-            await Room.updateOne({ roomName: roomName }, { status: true });
-            socket.to(roomName).emit('startGame', startGameState);
+        socket.on('handlePlayGame', async (roomName, playGameState) => {
+            await Room.updateOne({ roomName: roomName }, { status: !playGameState });
+            socket.to(roomName).emit('handlePlayGame', playGameState);
         })
 
         socket.on('stopDraw', async (roomName, position) => {
