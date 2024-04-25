@@ -1,0 +1,42 @@
+.buttonWrap {
+    position: fixed;
+    top: 34px;
+    left: 39px;
+    width: 60px;
+    height: 60px;
+}
+
+.modalOpenBtn {
+    object-fit: contain;
+    width: 50px;
+}
+
+.modalContainer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px;
+}
+
+.modalContent button {
+    width: 287px;
+    height: 72px;
+    margin-bottom: 0.7rem;
+    font-size: larger;
+    border: none;
+    border-radius: 20px;
+    background-color: #97BBE9;
+}

@@ -3,6 +3,7 @@ import styles from '../style/canvas.module.css';
 import Brush from '../img/brush.png';
 import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
+import ModalButton from './ModalButton';
 
 export default function PlayingGame(props) {
     const canvasRef = useRef(null);
@@ -110,6 +111,8 @@ export default function PlayingGame(props) {
 
     return (
         <div>
+            
+            <ModalButton />
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />
@@ -136,6 +139,7 @@ export default function PlayingGame(props) {
                     onMouseMove={e => drawFn(e)}
                     onMouseLeave={() => setPainting(false)}
                 >
+                
                 </canvas>
             </div>
         </div>
