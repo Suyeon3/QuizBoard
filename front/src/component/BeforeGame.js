@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import Logo from '../img/Logo.png';
 import LogoImg from '../img/LogoImage.png';
 import styles from '../style/beforegame.module.css';
+import { PlayGameContext } from '../context/PlayGameContext';
 
-export default function BeforeGame(props) {
-    const { handlePlayGame } = props;
+export default function BeforeGame() {
+    const handlePlayGame = useContext(PlayGameContext);
     return (
         <div>
             <div className={styles.container}>

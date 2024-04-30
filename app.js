@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    const username = req.body.userId;
-    const password = req.body.userPw;
+    const username = req.body.inputId;
+    const password = req.body.inputPw;
     const sendData = {
         isLogin: undefined,
         userName: undefined

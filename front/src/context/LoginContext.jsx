@@ -1,17 +1,19 @@
 import { createContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 export const LoginContext = createContext();
 
 export function LoginProvider({children}) {
-    const location = useLocation();
-    const [isLogin, setIsLogin] = useState(location.state?.isLogin);
-    function handleLogout() {
+    const [isLogin, setIsLogin] = useState(false);
+    const [userId, setUserId] = useState('');
+    function handleLoginState() {
         setIsLogin(!isLogin);
     }
+    function handleUserId(userId) {
+        setUserId(userId);
+    };
 
     return (
-        <LoginContext.Provider value={ {isLogin, handleLogout} }>
+        <LoginContext.Provider value={ {isLogin, handleLoginState, userId, handleUserId} }>
             {children}
         </LoginContext.Provider>
     )

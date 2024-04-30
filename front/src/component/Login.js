@@ -1,24 +1,23 @@
 import socketIo from "../server";
-import { useState, useEffect } from 'react';
+import { LoginContext } from "../context/LoginContext";
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from './Header';
 import styles from '../style/login.module.css';
 
 export default function Login() {
-    const [userId, setUserId] = useState('');
-    const [userPw, setUserPw] = useState('');
+    const { handleLoginState, userId, handleUserId } = useContext(LoginContext);
+    const [inputId, setInputId] = useState('');
+    const [inputPw, setInputPw] = useState('');
     const navigate = useNavigate();
 
     // Todo: 쿠키에 token 저장하고 메인으로 리다이렉트?
 
-    useEffect(() => {
-    }, [userId, userPw])
-
     function handleLogin() {
         console.log(userId);
         const userData = {
-            userId,
-            userPw
+            inputId,
+            inputPw
         };
         // Todo: axios로 ajax방식 수정
         fetch('http://localhost:5001/login', {
@@ -32,17 +31,14 @@ export default function Login() {
             .then((json) => {
                 if (json.isLogin === true) {
                     socketIo.emit('login', userId, (res) => {
-                        console.log("Res", res)
+                        console.log(`isLogin: ${json.isLogin}`)
                     });
-                    navigate('/', {
-                        state: {
-                            isLogin: json.isLogin,
-                            userName: json.userName
-                        }
-                    });
+                    handleLoginState(); //비동기..
+                    handleUserId(json.userName);
+                    navigate('/');
                 }
                 else {
-                    alert(json.isLogin);
+                    alert(`isLogin: ${json.isLogin}`);
                 }
             });
 
@@ -63,9 +59,9 @@ export default function Login() {
                             name='id'
                             type='text'
                             placeholder="아이디 입력"
-                            value={userId}
+                            value={inputId}
                             onChange={e => {
-                                setUserId(e.target.value);
+                                setInputId(e.target.value);
                             }}>
                         </input><br />
                         <input
@@ -73,9 +69,9 @@ export default function Login() {
                             name='pw'
                             type='password'
                             placeholder="비밀번호 입력"
-                            value={userPw}
+                            value={inputPw}
                             onChange={e => {
-                                setUserPw(e.target.value);
+                                setInputPw(e.target.value);
                             }}>
                         </input><br />
                         </div>

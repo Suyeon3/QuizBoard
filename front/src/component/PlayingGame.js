@@ -1,17 +1,20 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import styles from '../style/canvas.module.css';
 import Brush from '../img/brush.png';
 import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
 import ModalButton from './ModalButton';
+import { LoginContext } from '../context/LoginContext';
+import { RoomNameContext } from '../context/RoomNameContext';
 
 export default function PlayingGame(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const [painting, setPainting] = useState(false);
     const [currentColor, setCurrentColor] = useState('black');
-
-    const { socket, roomName, host, userId, handlePlayGame } = props;
+    const { isLogin, userId } = useContext(LoginContext);
+    const { roomName } = useContext(RoomNameContext);
+    const { socket } = props;
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -43,7 +46,7 @@ export default function PlayingGame(props) {
         return () => {
             window.removeEventListener('resize', handleSize);
         }
-    }, [props]);
+    }, [isLogin, userId, roomName, socket]);
 
     useEffect(() => {
         if (!socket) return;
@@ -112,9 +115,7 @@ export default function PlayingGame(props) {
     return (
         <div>
 
-            <ModalButton
-                handlePlayGame={handlePlayGame}
-            />
+            <ModalButton/>
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />

@@ -4,12 +4,13 @@ import { LoginContext } from '../context/LoginContext';
 import styles from '../style/header.module.css';
 
 export default function LoginBtn() {
-    const { isLogin, handleLogout } = useContext(LoginContext);
+    const { isLogin, handleLoginState } = useContext(LoginContext);
 
     return (
         <div className='login'>
             {isLogin ? (
-                <button onClick={handleLogout} className={styles.login}>로그아웃</button>
+                // 서버도 로그아웃하기
+                <button onClick={handleLoginState} className={styles.login}>로그아웃</button>
             ) : (
                 <Link to='/login'><button className={styles.login}>로그인</button></Link>
             )

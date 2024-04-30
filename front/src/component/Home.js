@@ -3,47 +3,41 @@ import Header from './Header';
 import Logo from '../img/Logo.png';
 import LogoImg from '../img/LogoImage.png';
 import styles from '../style/home.module.css';
-import { useLocation, useNavigate } from "react-router-dom";
-import { LoginProvider } from "../context/LoginContext";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { LoginContext } from '../context/LoginContext';
+import { RoomNameContext } from "../context/RoomNameContext";
 
 export default function Home() {
-    const location = useLocation();
+    const { isLogin, userId } = useContext(LoginContext);
+    const { roomName, handleRoomName} = useContext(RoomNameContext);
     const navigate = useNavigate();
-    const [userName, setUserName] = useState(location.state?.userName);
     const [isInputShown, setInputShown] = useState(false);
-    const [roomName, setRoomName] = useState('');
 
     function createRoom() {
-        if (location.state?.isLogin) {
+        if (isLogin) {
             setInputShown(true);
         } else {
             alert('비회원은 방 생성이 불가합니다.');
         }
     }
-    
-    function handleRoomName(e) {
-        setRoomName(e.target.value);
-    }
 
     function createRoomName(e) {
         if (e.keyCode === 13) {
-            socketIo.emit('createRoom', { roomName: `${e.target.value}`, userId: `${userName}` }, () => {
+            socketIo.emit('createRoom', { roomName: `${e.target.value}`, userId: `${userId}` }, () => {
                 navigate('/room', {
                     state: {
-                        roomName: e.target.value,
-                        userId: userName,
-                        host: userName
+                        host: userId
                     }
                 });
             });
             setInputShown(false);
-            setRoomName('');
+            e.target.value = '';
         }
     }
 
     function enterRoom() {
-        socketIo.emit('enterRoom', { msg: `${userName} enters room` }, () => {
+        socketIo.emit('enterRoom', { msg: `${userId} enters room` }, () => {
             receiveRoomName();
         })
     }
@@ -54,7 +48,7 @@ export default function Home() {
                 navigate('/room', {
                     state: {
                         roomName: roomName,
-                        userId: userName
+                        userId: userId
                     }
                 });
             } catch (error) {
@@ -66,7 +60,6 @@ export default function Home() {
 
 
     return (
-        <LoginProvider>
             <div>
                 <Header page={'home'} />
                 <div className={styles.container}>
@@ -80,7 +73,7 @@ export default function Home() {
                                 className={styles.createRoom_input}
                                 type='text'
                                 value={roomName}
-                                onChange={handleRoomName}
+                                onChange={(e) => handleRoomName(e.target.value)}
                                 onKeyUp={createRoomName}
                                 placeholder="방 이름을 입력하세요"
                             />
@@ -91,7 +84,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-        </LoginProvider>
     )
 
 }

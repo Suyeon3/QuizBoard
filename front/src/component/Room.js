@@ -1,21 +1,21 @@
 import socketIo from "../server";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import BeforeGame from './BeforeGame';
 import PlayingGame from "./PlayingGame";
+import { RoomNameContext } from "../context/RoomNameContext";
+import { PlayGameProvider } from "../context/PlayGameContext";
 
 export default function Room() {
-
     const navigate = useNavigate();
-    const { state } = useLocation()
-    const roomName = state?.roomName;
-    const userId = state?.userId;
+    const [playGame, setPlayGame] = useState(false);
+    const { roomName, handleRoomName } = useContext(RoomNameContext);
+    const { state } = useLocation();
     const host = state?.host;
     const isMounted = useRef(false);
 
-    const [playGame, setPlayGame] = useState(false);
 
-    function leaveRoom () {
+    function leaveRoom() {
         // host 나가면 방 없어짐, guest 나가면 방 그대로임 
         console.log(`${roomName}에서 나감`);
         if (host) {
@@ -24,6 +24,7 @@ export default function Room() {
         else {
             socketIo.emit('guestLeaveRoom', roomName);
         }
+        handleRoomName('');
     }
 
     useEffect(() => {
@@ -57,11 +58,7 @@ export default function Room() {
             }
             else {
                 leaveRoom();
-                navigate('/', {
-                    state: {
-                        roomName: roomName,
-                    }
-                })
+                navigate('/');
             }
         }
         // startGame
@@ -74,32 +71,30 @@ export default function Room() {
                 alert('호스트만 게임을 시작할 수 있습니다.');
             }
         }
-    }
+    };
 
     // host가 설정한 상태로(playGame/ endGame) 이동
     socketIo.on('handlePlayGame', (playGameState) => {
         setPlayGame(playGameState);
     })
 
+
+
     return (
         <div>
-            {playGame ?
-                <PlayingGame
-                    socket={socketIo}
-                    roomName={roomName}
-                    host={host}
-                    userId={userId}
-                    handlePlayGame={handlePlayGame}
-                />
-                :
-                <BeforeGame
-                    socket={socketIo}
-                    roomName={roomName}
-                    host={host}
-                    userId={userId}
-                    handlePlayGame={handlePlayGame}
-                />
-            }
+            <PlayGameProvider handlePlayGame={handlePlayGame}>
+                {playGame ?
+                    <PlayingGame
+                        socket={socketIo}
+                        host={host}
+                    />
+                    :
+                    <BeforeGame
+                        socket={socketIo}
+                        host={host}
+                    />
+                }
+            </PlayGameProvider>
         </div>
     );
 }

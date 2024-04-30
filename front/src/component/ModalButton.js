@@ -1,10 +1,11 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styles from '../style/modal.module.css';
 import BackButton from '../img/backButton.png';
+import { PlayGameContext } from "../context/PlayGameContext";
 
-export default function ModalButton(props) {
-    const { handlePlayGame } = props;
+export default function ModalButton() {
+    const handlePlayGame = useContext(PlayGameContext);
     const [modalOpen, setModalOpen] = useState(false);
 
     function handleCloseModal() {
