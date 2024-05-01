@@ -1,20 +1,14 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import styles from '../style/modal.module.css';
 import BackButton from '../img/backButton.png';
 import { PlayGameContext } from "../context/PlayGameContext";
+import { useModal } from "../logic/useModal";
 
-export default function ModalButton() {
+export default function LeaveGameModal() {
     const handlePlayGame = useContext(PlayGameContext);
-    const [modalOpen, setModalOpen] = useState(false);
+    const { modalOpen, openModal, closeModal } = useModal();
 
-    function handleCloseModal() {
-        setModalOpen(false);
-    }
-
-    function handleLeaveGame() {
-        handlePlayGame();
-    }
 
     return (
         <>
@@ -22,15 +16,15 @@ export default function ModalButton() {
                 <img
                     className={styles.modalOpenBtn}
                     src={BackButton}
-                    onClick={() => setModalOpen(true)}
+                    onClick={openModal}
                 />
             </div>
             {
                 modalOpen &&
                 <div className={styles.modalContainer}>
                     <div className={styles.modalContent}>
-                        <button onClick={handleCloseModal}>계속하기</button>
-                        <button onClick={handleLeaveGame}>나가기</button>
+                        <button onClick={closeModal}>계속하기</button>
+                        <button onClick={handlePlayGame}>나가기</button>
                     </div>
                 </div>
             }

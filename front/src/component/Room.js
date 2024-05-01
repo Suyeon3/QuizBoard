@@ -11,27 +11,29 @@ export default function Room() {
     const [playGame, setPlayGame] = useState(false);
     const { roomName, handleRoomName } = useContext(RoomNameContext);
     const { state } = useLocation();
-    const host = state?.host;
+    const isHost = state?.isHost;
     const isMounted = useRef(false);
 
 
     function leaveRoom() {
         // host 나가면 방 없어짐, guest 나가면 방 그대로임 
         console.log(`${roomName}에서 나감`);
-        if (host) {
-            socketIo.emit('hostLeaveRoom', roomName);
+        if (isHost) {
+            socketIo.emit('allLeaveRoom', roomName);   // allLeaveRoom
         }
         else {
             socketIo.emit('guestLeaveRoom', roomName);
+            navigate('/');
         }
         handleRoomName('');
     }
 
+    socketIo.on('deleteRoom', () => {
+        navigate('/');
+    })
+
     useEffect(() => {
         console.log(`첫 렌더링됨 -> roomName:${roomName}`);
-        return () => {
-            leaveRoom();
-        }
     }, []);
 
     useEffect(() => {
@@ -53,7 +55,7 @@ export default function Room() {
         // endGame
         // host는 BeforGame으로 설정(guest들도 함께), guest는 완전 나가기
         if(playGame) {
-            if (host) {
+            if (isHost) {
                 setPlayGame(!playGame);
             }
             else {
@@ -64,7 +66,7 @@ export default function Room() {
         // startGame
         // host는 PlayingGame으로 설정(guest들도 함께), guset는 결정권 없음
         else {
-            if(host) {
+            if(isHost) {
                 setPlayGame(!playGame);
             }
             else {
@@ -86,12 +88,10 @@ export default function Room() {
                 {playGame ?
                     <PlayingGame
                         socket={socketIo}
-                        host={host}
                     />
                     :
                     <BeforeGame
-                        socket={socketIo}
-                        host={host}
+                        leaveRoom={leaveRoom}
                     />
                 }
             </PlayGameProvider>

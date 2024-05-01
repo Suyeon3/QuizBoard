@@ -3,8 +3,7 @@ import styles from '../style/canvas.module.css';
 import Brush from '../img/brush.png';
 import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
-import ModalButton from './ModalButton';
-import { LoginContext } from '../context/LoginContext';
+import LeaveGameModal from './LeaveGameModal';
 import { RoomNameContext } from '../context/RoomNameContext';
 
 export default function PlayingGame(props) {
@@ -12,7 +11,6 @@ export default function PlayingGame(props) {
     const ctxRef = useRef(null);
     const [painting, setPainting] = useState(false);
     const [currentColor, setCurrentColor] = useState('black');
-    const { isLogin, userId } = useContext(LoginContext);
     const { roomName } = useContext(RoomNameContext);
     const { socket } = props;
 
@@ -46,7 +44,7 @@ export default function PlayingGame(props) {
         return () => {
             window.removeEventListener('resize', handleSize);
         }
-    }, [isLogin, userId, roomName, socket]);
+    }, [props]);
 
     useEffect(() => {
         if (!socket) return;
@@ -115,7 +113,7 @@ export default function PlayingGame(props) {
     return (
         <div>
 
-            <ModalButton/>
+            <LeaveGameModal/>
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />

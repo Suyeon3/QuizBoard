@@ -27,7 +27,7 @@ export default function Home() {
             socketIo.emit('createRoom', { roomName: `${e.target.value}`, userId: `${userId}` }, () => {
                 navigate('/room', {
                     state: {
-                        host: userId
+                        isHost: true
                     }
                 });
             });
@@ -37,25 +37,19 @@ export default function Home() {
     }
 
     function enterRoom() {
-        socketIo.emit('enterRoom', { msg: `${userId} enters room` }, () => {
-            receiveRoomName();
-        })
+        socketIo.emit('enterRoom', { msg: `${userId} enters room` });
     }
 
-    function receiveRoomName() {
-        socketIo.on('sendRoomName', (roomName) => {
-            try {
-                navigate('/room', {
-                    state: {
-                        roomName: roomName,
-                        userId: userId
-                    }
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        })
-    }
+    socketIo.on('sendRoomName', (roomName) => {
+        try {
+            handleRoomName(roomName);
+            navigate('/room', {
+                isHost: false
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    })
 
 
 

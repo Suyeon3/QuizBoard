@@ -4,10 +4,12 @@ import LogoImg from '../img/LogoImage.png';
 import styles from '../style/beforegame.module.css';
 import { PlayGameContext } from '../context/PlayGameContext';
 
-export default function BeforeGame() {
+export default function BeforeGame(props) {
     const handlePlayGame = useContext(PlayGameContext);
+    const { leaveRoom } = props;
     return (
         <div>
+            <button onClick={leaveRoom}>퇴장하기</button>
             <div className={styles.container}>
                 <div className={styles.logoWrap}>
                     <img src={LogoImg} className={styles.logoImg} />

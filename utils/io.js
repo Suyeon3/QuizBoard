@@ -38,7 +38,7 @@ module.exports = function (io) {
             }
         })
 
-        socket.on('enterRoom', async (msg, cb) => {
+        socket.on('enterRoom', async (msg) => {
             try {
                 console.log(msg);
                 const rooms = await Room.aggregate([{ $match: { status: false } }, { $sample: { size: 1 } }]);
@@ -51,7 +51,6 @@ module.exports = function (io) {
                 } else {
                     console.log('No rooms available.');
                 }
-                cb()
             } catch (error) {
                 console.log(error.message)
                 cb({ ok: false, error: error.message })
@@ -60,12 +59,13 @@ module.exports = function (io) {
 
         function sendRoomName(roomName) {
             socket.emit('sendRoomName', roomName);
-            console.log('서버에서 sendRoomName 실행됨');
+            console.log(`guest로 ${roomName} 입장`);
         }
 
-        socket.on('hostLeaveRoom', async (roomName) => {
+        socket.on('allLeaveRoom', async (roomName) => {
+            io.to(roomName).emit('deleteRoom');
+            console.log(`host가 ${roomName}을 삭제`);
             io.socketsLeave(roomName);
-            console.log(`${socket.id}가 ${roomName}을 나감`);
             await Room.deleteOne({ roomName: roomName });
         }) 
 
@@ -79,7 +79,7 @@ module.exports = function (io) {
         })
 
         socket.on('handlePlayGame', async (roomName, playGameState) => {
-            await Room.updateOne({ roomName: roomName }, { status: !playGameState });
+            await Room.updateOne({ roomName: roomName }, { status: playGameState });
             socket.to(roomName).emit('handlePlayGame', playGameState);
         })
 
