@@ -11,7 +11,7 @@ const { Server } = require('socket.io');
 
 const db = mongoose.connection;
 
-mongoose.connect(process.env.DB)
+mongoose.connect(process.env.REACT_APP_DB)
     .catch(error => handleError(error))
     .then(() => {
         console.log('connected to database');
@@ -76,8 +76,8 @@ app.post('/login', async (req, res) => {
     }
 });
 
-httpServer.listen(process.env.PORT, () => {
-    console.log('server listening on port', process.env.PORT);
+httpServer.listen(process.env.REACT_APP_PORT || 5001, () => {
+    console.log('server listening on port', process.env.REACT_APP_PORT);
 })
 
 module.exports = app;
