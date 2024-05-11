@@ -3,6 +3,7 @@ import Logo from '../img/Logo.png';
 import LogoImg from '../img/LogoImage.png';
 import styles from '../style/beforegame.module.css';
 import { PlayGameContext } from '../context/PlayGameContext';
+import Chat from './Chat';
 
 export default function BeforeGame(props) {
     const handlePlayGame = useContext(PlayGameContext);
@@ -18,6 +19,7 @@ export default function BeforeGame(props) {
                 <div className={styles.btnWrap}>
                     <div className={styles.startBtn} onClick={handlePlayGame}>게임 시작</div>
                 </div>
+            <Chat />
             </div>
         </div>
     )

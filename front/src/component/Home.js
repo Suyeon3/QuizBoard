@@ -9,7 +9,7 @@ import { LoginContext } from '../context/LoginContext';
 import { RoomNameContext } from "../context/RoomNameContext";
 
 export default function Home() {
-    const { isLogin, userId } = useContext(LoginContext);
+    const { isLogin, userId, handleUserName } = useContext(LoginContext);
     const { roomName, handleRoomName} = useContext(RoomNameContext);
     const navigate = useNavigate();
     const [isInputShown, setInputShown] = useState(false);
@@ -37,14 +37,17 @@ export default function Home() {
     }
 
     function enterRoom() {
-        socketIo.emit('enterRoom', { msg: `${userId} enters room` });
+        socketIo.emit('enterRoom', { msg: `${socketIo.id} enters room` });
     }
 
-    socketIo.on('sendRoomName', (roomName) => {
+    socketIo.on('sendRoomName', (roomName, totalAnony) => {
         try {
             handleRoomName(roomName);
+            if (!isLogin) {
+                handleUserName(`익명 ${totalAnony+1}`);
+            };
             navigate('/room', {
-                isHost: false
+                isHost: false,
             });
         } catch (error) {
             console.error(error);

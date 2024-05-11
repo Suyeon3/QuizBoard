@@ -9,13 +9,12 @@ module.exports = function (io) {
         socket.on('login', async (userId, cb) => {
             try {
                 const user = await User.findOne({ userId });
-                user.sid = socket.id;   // Todo: 토큰 JWT 방식으로..
+                await User.updateOne({ userId }, { $set: { sid: socket.id } });
                 console.log(user.sid)
                 cb({ ok: true, data: user });
             } catch (error) {
                 cb({ ok: false, error: error.message })
             }
-
         })
 
         socket.on('createRoom', async (data, done) => {
@@ -44,36 +43,31 @@ module.exports = function (io) {
                 const rooms = await Room.aggregate([{ $match: { status: false } }, { $sample: { size: 1 } }]);
                 if (rooms.length > 0) {
                     const room = rooms[0];
+                    const totalAnony = room.allMembers.length - room.registeredMembers.length;
                     socket.join(room.roomName);
-                    // console.log(socket.adapter.rooms);
                     await Room.updateOne({ _id: room._id }, { $push: { allMembers: socket.id } });
-                    sendRoomName(room.roomName);
+                    socket.emit('sendRoomName', room.roomName, totalAnony);
                 } else {
                     console.log('No rooms available.');
                 }
             } catch (error) {
                 console.log(error.message)
-                cb({ ok: false, error: error.message })
             }
         })
 
-        function sendRoomName(roomName) {
-            socket.emit('sendRoomName', roomName);
-            console.log(`guest로 ${roomName} 입장`);
-        }
 
         socket.on('allLeaveRoom', async (roomName) => {
             io.to(roomName).emit('deleteRoom');
             console.log(`host가 ${roomName}을 삭제`);
             io.socketsLeave(roomName);
             await Room.deleteOne({ roomName: roomName });
-        }) 
+        })
 
         socket.on('guestLeaveRoom', async (roomName) => {
             socket.leave(roomName);
             console.log(`${socket.id}가 ${roomName}을 나감`);
             const room = await Room.findOne({ roomName: roomName });
-            const {allMembers} = room;
+            const { allMembers } = room;
             const newMembers = allMembers.filter(member => member !== socket.id);
             await Room.updateOne({ roomName: roomName }, { allMembers: newMembers });
         })
@@ -97,6 +91,10 @@ module.exports = function (io) {
 
         socket.on('reset', async (roomName, resetFillColor) => {
             io.to(roomName).emit('reset', resetFillColor);
+        })
+
+        socket.on('sendMsg', async (roomName, msg) => {
+            io.to(roomName).emit('receiveMsg', msg);
         })
 
         socket.on('disconnect', () => {

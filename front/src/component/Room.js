@@ -5,11 +5,13 @@ import BeforeGame from './BeforeGame';
 import PlayingGame from "./PlayingGame";
 import { RoomNameContext } from "../context/RoomNameContext";
 import { PlayGameProvider } from "../context/PlayGameContext";
+import { LoginContext } from "../context/LoginContext";
 
 export default function Room() {
     const navigate = useNavigate();
     const [playGame, setPlayGame] = useState(false);
     const { roomName, handleRoomName } = useContext(RoomNameContext);
+    const { userName, handleUserName } = useContext(LoginContext);
     const { state } = useLocation();
     const isHost = state?.isHost;
     const isMounted = useRef(false);
@@ -23,6 +25,7 @@ export default function Room() {
         }
         else {
             socketIo.emit('guestLeaveRoom', roomName);
+            handleUserName('');
             navigate('/');
         }
         handleRoomName('');
@@ -33,14 +36,11 @@ export default function Room() {
     })
 
     useEffect(() => {
-        console.log(`첫 렌더링됨 -> roomName:${roomName}`);
-    }, []);
+        console.log(`userName: ${userName}`);
+    }, [userName]);
 
     useEffect(() => {
         console.log(`roomName 렌더링 -> ${roomName}에 입장`);
-        return () => {
-            console.log(`roomNameSet: ${roomName}`);
-        }
     }, [roomName]);
 
     useEffect(() => {

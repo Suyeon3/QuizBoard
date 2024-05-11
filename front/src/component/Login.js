@@ -6,7 +6,7 @@ import Header from './Header';
 import styles from '../style/login.module.css';
 
 export default function Login() {
-    const { handleLoginState, userId, handleUserId } = useContext(LoginContext);
+    const { handleLoginState, userId, handleUserId, handleUserName } = useContext(LoginContext);
     const [inputId, setInputId] = useState('');
     const [inputPw, setInputPw] = useState('');
     const navigate = useNavigate();
@@ -34,7 +34,8 @@ export default function Login() {
                         console.log(`isLogin: ${json.isLogin}`)
                     });
                     handleLoginState(); //비동기..
-                    handleUserId(json.userName);
+                    handleUserId(json.userId);
+                    handleUserName(json.userName);
                     navigate('/');
                 }
                 else {
@@ -55,31 +56,31 @@ export default function Login() {
                     <div className={styles.loginWrap}>
                         <div className={styles.inputWrap}>
                             <input
-                            className={styles.idInput}
-                            name='id'
-                            type='text'
-                            placeholder="아이디 입력"
-                            value={inputId}
-                            onChange={e => {
-                                setInputId(e.target.value);
-                            }}>
-                        </input><br />
-                        <input
-                            className={styles.pwInput}
-                            name='pw'
-                            type='password'
-                            placeholder="비밀번호 입력"
-                            value={inputPw}
-                            onChange={e => {
-                                setInputPw(e.target.value);
-                            }}>
-                        </input><br />
+                                className={styles.idInput}
+                                name='id'
+                                type='text'
+                                placeholder="아이디 입력"
+                                value={inputId}
+                                onChange={e => {
+                                    setInputId(e.target.value);
+                                }}>
+                            </input><br />
+                            <input
+                                className={styles.pwInput}
+                                name='pw'
+                                type='password'
+                                placeholder="비밀번호 입력"
+                                value={inputPw}
+                                onChange={e => {
+                                    setInputPw(e.target.value);
+                                }}>
+                            </input><br />
                         </div>
-                        
+
                         <button
                             onClick={handleLogin}
                             className={styles.loginBtn}>
-                        로그인
+                            로그인
                         </button>
                     </div>
 

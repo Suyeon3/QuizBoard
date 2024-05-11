@@ -1,0 +1,70 @@
+.container {
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    width: 260px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    /* border-style: dashed; */
+}
+
+.chat_field {
+    height: 90%;
+    background: linear-gradient(
+        to bottom,
+        rgba(169,169,169, 0) 10%,
+        rgba(169,169,169, 0.1) 15%,
+        rgba(169,169,169, 0.3) 25%,
+        rgba(169,169,169, 0.4) 40%,
+        rgba(169,169,169, 0.5) 50%,
+        rgb(169, 169, 169, 0.6) 75%,
+        rgb(169, 169, 169, 0.7) 100%
+    );
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.message-enter {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.message-enter-active {
+    opacity: 1;
+    transform: translateY(0%);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.message-exit {
+    opacity: 1;
+    transform: translateY(0%);
+}
+
+.message-exit-active {
+    opacity:0;
+    transform: translateY(-100%);
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.message
+
+.chat_input_field {
+    height: 10%;   
+}
+
+.text_input {
+    height: 100%;
+    width: 80%;
+    border-style: none;
+    padding-left: 10px;
+}
+
+.text_send {
+    display: inline-block;
+    height: 100%;
+    background-color: #D7E8FF;
+    width: 20%;
+    text-align: center;
+}

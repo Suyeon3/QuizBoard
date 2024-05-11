@@ -38,22 +38,24 @@ app.get('/', (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    const username = req.body.inputId;
+    const userid = req.body.inputId;
     const password = req.body.inputPw;
     const sendData = {
         isLogin: undefined,
+        userId: undefined,
         userName: undefined
     };
 
     try {
-        if (username && password) {
-            const user = await User.findOne({ userId: username });
+        if (userid && password) {
+            const user = await User.findOne({ userId: userid });
             if (user) {   // 아이디 일치
                 // Todo: 입력된 비밀번호가 해시된 저장값과 같은지 비교
                 if (user.password === password) {
                     // Todo: 세션 정보 갱신으로 수정
                     sendData.isLogin = true;
-                    sendData.userName = username;
+                    sendData.userId = user.userId;
+                    sendData.userName = user.userName;
 
                     return res.send(sendData);
                 }
