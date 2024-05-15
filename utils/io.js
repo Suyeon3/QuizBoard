@@ -93,8 +93,8 @@ module.exports = function (io) {
             io.to(roomName).emit('reset', resetFillColor);
         })
 
-        socket.on('sendMsg', async (roomName, msg) => {
-            io.to(roomName).emit('receiveMsg', msg);
+        socket.on('sendMsg', async (roomName, userName, msg) => {
+            io.to(roomName).emit('receiveMsg', msg, socket.id, userName);
         })
 
         socket.on('disconnect', () => {
