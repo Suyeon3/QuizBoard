@@ -5,6 +5,8 @@ import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
 import LeaveGameModal from './LeaveGameModal';
 import { RoomNameContext } from '../context/RoomNameContext';
+import { useModal } from "../hooks/useModal";
+import useBackHandler from '../hooks/useBackHandler';
 
 export default function PlayingGame(props) {
     const canvasRef = useRef(null);
@@ -13,6 +15,8 @@ export default function PlayingGame(props) {
     const [currentColor, setCurrentColor] = useState('black');
     const { roomName } = useContext(RoomNameContext);
     const { socket } = props;
+
+    useBackHandler();
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -112,13 +116,12 @@ export default function PlayingGame(props) {
 
     return (
         <div>
-
             <LeaveGameModal/>
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />
-                    <img id={styles.tool} data-tool='eraser' src={Eraser} onClick={setEraser}/>
-                    <img id={styles.tool} data-tool='reset' src={Reset} onClick={setReset}/>
+                    <img id={styles.tool} data-tool='eraser' src={Eraser} onClick={setEraser} />
+                    <img id={styles.tool} data-tool='reset' src={Reset} onClick={setReset} />
                 </div>
                 <div className={styles.colors} onClick={setColor}>
                     <div id={styles.color} data-color='black'></div>
@@ -140,7 +143,7 @@ export default function PlayingGame(props) {
                     onMouseMove={e => drawFn(e)}
                     onMouseLeave={() => setPainting(false)}
                 >
-                
+
                 </canvas>
             </div>
         </div>

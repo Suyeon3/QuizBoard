@@ -3,12 +3,11 @@ import { useContext } from "react";
 import styles from '../style/modal.module.css';
 import BackButton from '../img/backButton.png';
 import { PlayGameContext } from "../context/PlayGameContext";
-import { useModal } from "../logic/useModal";
+import useHash from "../hooks/useHash";
 
-export default function LeaveGameModal() {
+export default function LeaveGameModal(props) {
     const handlePlayGame = useContext(PlayGameContext);
-    const { modalOpen, openModal, closeModal } = useModal();
-
+    const { setHash, removeHash, HashElement } = useHash();
 
     return (
         <>
@@ -16,18 +15,17 @@ export default function LeaveGameModal() {
                 <img
                     className={styles.modalOpenBtn}
                     src={BackButton}
-                    onClick={openModal}
+                    onClick={() => setHash('modal')}
                 />
             </div>
-            {
-                modalOpen &&
+            <HashElement>
                 <div className={styles.modalContainer}>
                     <div className={styles.modalContent}>
-                        <button onClick={closeModal}>계속하기</button>
+                        <button onClick={removeHash}>계속하기</button>
                         <button onClick={handlePlayGame}>나가기</button>
                     </div>
                 </div>
-            }
+            </HashElement>
         </>
     )
 }
