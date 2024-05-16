@@ -5,7 +5,7 @@ import BackButton from '../img/backButton.png';
 import { PlayGameContext } from "../context/PlayGameContext";
 import useHash from "../hooks/useHash";
 
-export default function LeaveGameModal(props) {
+export default function LeaveGameModal() {
     const handlePlayGame = useContext(PlayGameContext);
     const { setHash, removeHash, HashElement } = useHash();
 

@@ -4,11 +4,13 @@ import Login from './component/Login';
 import Room from './component/Room';
 import { LoginProvider } from './context/LoginContext';
 import { RoomNameProvider } from './context/RoomNameContext';
+import { HostProvider } from './context/HostContext';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <HostProvider>
         <LoginProvider>
         <RoomNameProvider>
             <Routes>
@@ -18,6 +20,7 @@ function App() {
             </Routes>
         </RoomNameProvider>
         </LoginProvider>
+        </HostProvider>
       </BrowserRouter>
     </div>
   );

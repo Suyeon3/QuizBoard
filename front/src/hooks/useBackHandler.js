@@ -1,15 +1,24 @@
 // import { history } from '../history';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { history } from '../history';
 import useHash from './useHash';
+import useLeaveRoom from '../hooks/useLeaveRoom';
+import { HostContext } from '../context/HostContext';
 
-export default function useBackHandler() {
+export default function useBackHandler(isGamePlaying) {
+    const { isHost } = useContext(HostContext);
     const { setHash } = useHash();
+    const leaveRoom = useLeaveRoom();
 
-    useEffect(() => {;
+    useEffect(() => {
 
         const listenBack = () => {
-            setHash('modal');
+
+            if (isGamePlaying) {
+                setHash('modal');
+            } else {
+                leaveRoom(isHost);
+            }
         };
 
         const unlistenBack = history.listen(({ action }) => {

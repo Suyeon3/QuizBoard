@@ -5,7 +5,6 @@ import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
 import LeaveGameModal from './LeaveGameModal';
 import { RoomNameContext } from '../context/RoomNameContext';
-import { useModal } from "../hooks/useModal";
 import useBackHandler from '../hooks/useBackHandler';
 
 export default function PlayingGame(props) {
@@ -14,9 +13,9 @@ export default function PlayingGame(props) {
     const [painting, setPainting] = useState(false);
     const [currentColor, setCurrentColor] = useState('black');
     const { roomName } = useContext(RoomNameContext);
-    const { socket } = props;
+    const { socket, playGame } = props;
 
-    useBackHandler();
+    useBackHandler(playGame);
 
     useEffect(() => {
         const canvas = canvasRef.current;

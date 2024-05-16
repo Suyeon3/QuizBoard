@@ -6,34 +6,29 @@ import PlayingGame from "./PlayingGame";
 import { RoomNameContext } from "../context/RoomNameContext";
 import { PlayGameProvider } from "../context/PlayGameContext";
 import { LoginContext } from "../context/LoginContext";
+import { HostContext } from '../context/HostContext';
+import useLeaveRoom from '../hooks/useLeaveRoom';
 
 export default function Room() {
     const navigate = useNavigate();
     const [playGame, setPlayGame] = useState(false);
-    const { roomName, handleRoomName } = useContext(RoomNameContext);
-    const { userName, handleUserName } = useContext(LoginContext);
+    const { roomName } = useContext(RoomNameContext);
+    const { userName } = useContext(LoginContext);
+    const { setIsHost } = useContext(HostContext);
     const { state } = useLocation();
     const isHost = state?.isHost;
     const isMounted = useRef(false);
-
-
-    function leaveRoom() {
-        // host 나가면 방 없어짐, guest 나가면 방 그대로임 
-        console.log(`${roomName}에서 나감`);
-        if (isHost) {
-            socketIo.emit('allLeaveRoom', roomName);   // allLeaveRoom
-        }
-        else {
-            socketIo.emit('guestLeaveRoom', roomName);
-            handleUserName('');
-            navigate('/');
-        }
-        handleRoomName('');
-    }
+    const leaveRoom = useLeaveRoom();
 
     socketIo.on('deleteRoom', () => {
         navigate('/');
     })
+
+    useEffect(() => {
+        if (isHost) {
+            setIsHost(true);
+        }
+    }, [isHost])
 
     useEffect(() => {
         console.log(`userName: ${userName}`);
@@ -59,7 +54,7 @@ export default function Room() {
                 setPlayGame(!playGame);
             }
             else {
-                leaveRoom();
+                leaveRoom(isHost);
                 navigate('/');
             }
         }
@@ -88,10 +83,11 @@ export default function Room() {
                 {playGame ?
                     <PlayingGame
                         socket={socketIo}
+                        playGame ={playGame}
                     />
                     :
                     <BeforeGame
-                        leaveRoom={leaveRoom}
+                        playGame={playGame}
                     />
                 }
             </PlayGameProvider>
