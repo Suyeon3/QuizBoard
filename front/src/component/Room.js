@@ -14,9 +14,8 @@ export default function Room() {
     const [playGame, setPlayGame] = useState(false);
     const { roomName } = useContext(RoomNameContext);
     const { userName } = useContext(LoginContext);
-    const { setIsHost } = useContext(HostContext);
+    const { isHost, setIsHost } = useContext(HostContext);
     const { state } = useLocation();
-    const isHost = state?.isHost;
     const isMounted = useRef(false);
     const leaveRoom = useLeaveRoom();
 
@@ -25,7 +24,7 @@ export default function Room() {
     })
 
     useEffect(() => {
-        if (isHost) {
+        if (state?.isHost) {
             setIsHost(true);
         }
     }, [isHost])
