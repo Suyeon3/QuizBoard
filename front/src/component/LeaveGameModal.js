@@ -22,7 +22,10 @@ export default function LeaveGameModal() {
                 <div className={styles.modalContainer}>
                     <div className={styles.modalContent}>
                         <button onClick={removeHash}>계속하기</button>
-                        <button onClick={handlePlayGame}>나가기</button>
+                        <button onClick={() => {
+                            handlePlayGame();
+                            removeHash();
+                        }}>나가기</button>
                     </div>
                 </div>
             </HashElement>
