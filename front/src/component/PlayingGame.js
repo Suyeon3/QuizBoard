@@ -26,6 +26,4 @@ export default function PlayingGame(props) {
     else {
         return <Canvas />
     }
-
-
 }
