@@ -1,0 +1,85 @@
+.enabled {
+    pointer-events: auto;
+}
+
+.disabled {
+    pointer-events: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.themeLogoWrap {
+    padding: 3rem;
+}
+
+.themeLogo {
+    width: 12.8rem;
+    height: 2.5rem;
+    object-fit: contain;
+}
+
+.themeBox {
+    width: 45vw;
+    height: 62vh;
+    background-color: #E6F1FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 2.3rem;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.themeListWrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.97rem;
+    width: 94%;
+    height: 70%;
+    margin-bottom: 2rem;
+}
+
+.theme {
+    background-color: #cadcf3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    font-size: larger;
+    width: 95%;
+}
+
+.theme:hover {
+    background: #BAE5F8;
+    border-color: #87D5F8;
+}
+
+.themeInput {
+    display: block;
+    background-color: #D7E6FA;
+    width: 50%;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    color: gray;
+    border-style: none;
+}
+
+.toast {
+    background-color: #8AABD6;
+    opacity: 45%;
+    color: aliceblue;
+    width: 38%;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}

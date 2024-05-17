@@ -5,6 +5,7 @@ import BeforeGame from './BeforeGame';
 import PlayingGame from "./PlayingGame";
 import { RoomNameContext } from "../context/RoomNameContext";
 import { PlayGameProvider } from "../context/PlayGameContext";
+import { CategoryProvider } from "../context/CategoryContext";
 import { LoginContext } from "../context/LoginContext";
 import { HostContext } from '../context/HostContext';
 import useLeaveRoom from '../hooks/useLeaveRoom';
@@ -78,6 +79,7 @@ export default function Room() {
 
     return (
         <div>
+            <CategoryProvider>            
             <PlayGameProvider handlePlayGame={handlePlayGame}>
                 {playGame ?
                     <PlayingGame
@@ -90,6 +92,8 @@ export default function Room() {
                     />
                 }
             </PlayGameProvider>
+            </CategoryProvider>
+
         </div>
     );
 }
