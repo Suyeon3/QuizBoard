@@ -72,6 +72,27 @@ export default function PlayingGame(props) {
         socket.emit('changeColor', roomName, currentColor);
     }, [currentColor]);
 
+    useEffect(() => {
+
+        const reset = (resetFillColor) => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+
+            const { width, height } = canvas.getBoundingClientRect();
+            const ctx = ctxRef.current;
+            if (!ctx) return;
+
+            ctx.fillStyle = resetFillColor;
+            ctx.fillRect(0, 0, width, height);
+
+        }
+        socket.on('reset', reset);
+    
+        return () => {
+            socket.off('reset', reset);
+        }
+    }, [props])
+
     function drawFn(e) {
         const mouseX = e.nativeEvent.offsetX;
         const mouseY = e.nativeEvent.offsetY;
@@ -104,14 +125,6 @@ export default function PlayingGame(props) {
         const resetFillColor = '#F2F7FF';
         socket.emit('reset', roomName, resetFillColor);
     }
-
-    socket.on('reset', (resetFillColor) => {
-        const canvas = canvasRef.current;
-        const { width, height } = canvas.getBoundingClientRect();
-        const ctx = ctxRef.current;
-        ctx.fillStyle = resetFillColor;
-        ctx.fillRect(0, 0, width, height);
-    })
 
     return (
         <div>
