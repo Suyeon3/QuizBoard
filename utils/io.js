@@ -22,7 +22,6 @@ module.exports = function (io) {
                 console.log(`${data.userId} created ${data.roomName} room.`);
                 const user = await User.findOne({ userId: data.userId });
                 socket.join(data.roomName);
-                // console.log(socket)
                 await Room.create({
                     roomName: data.roomName,
                     host: user._id,
@@ -40,7 +39,10 @@ module.exports = function (io) {
         socket.on('enterRoom', async (msg) => {
             try {
                 console.log(msg);
-                const rooms = await Room.aggregate([{ $match: { status: false } }, { $sample: { size: 1 } }]);
+                const rooms = await Room.aggregate([
+                    { $match: { status: false, $expr: { $lt: [{ $size: "$allMembers" }, 5] } } },
+                    { $sample: { size: 1 } }
+                ]);
                 if (rooms.length > 0) {
                     const room = rooms[0];
                     const totalAnony = room.allMembers.length - room.registeredMembers.length;
@@ -48,7 +50,7 @@ module.exports = function (io) {
                     await Room.updateOne({ _id: room._id }, { $push: { allMembers: socket.id } });
                     socket.emit('sendRoomName', room.roomName, totalAnony);
                 } else {
-                    console.log('No rooms available.');
+                    alert('No rooms available.');
                 }
             } catch (error) {
                 console.log(error.message)
