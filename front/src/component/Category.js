@@ -1,23 +1,68 @@
+import socketIo from '../server';
 import styles from '../style/category.module.css';
 import ThemeLogo from '../img/theme.png'
-import LeaveGameModal from './LeaveGameModal';
 import { HostContext } from '../context/HostContext';
 import { CategoryContext } from '../context/CategoryContext';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import { RoomNameContext } from '../context/RoomNameContext';
 
 export default function Category() {
     const themeList = ['음식', '영화', '인물', '장소', '사자성어', '속담'];
+    const { roomName } = useContext(RoomNameContext);
     const { isHost } = useContext(HostContext);
-    const { setTheme, setCategoryIsOn } = useContext(CategoryContext);
+    const { theme, setTheme, setCategoryIsOn, categoryIsOn } = useContext(CategoryContext);
+    const [isInputShown, setIsInputShown] = useState(false);
+    const [themeInput, setThemeInput] = useState('');
+
 
     function chooseTheme(e) {
         setTheme(e.target.value);
         setCategoryIsOn(false);
     }
 
+    function handleThemeInputChange(e) {
+        setThemeInput(e.target.value);
+    }
+
+    function submitThemeInput(e) {
+        if (e.keyCode === 13) {
+            setTheme(themeInput);
+            setCategoryIsOn(false);
+            setIsInputShown(false);
+            socketIo.emit('categoryOff', roomName, false);
+        }
+    }
+
+    useEffect(() => {
+        socketIo.emit('categoryScreenShare', roomName, {
+            themeInput: themeInput,
+            theme: theme,
+            isInputShown: isInputShown
+        })
+    }, [themeInput, theme, isInputShown]);
+
+    useEffect(() => {
+        socketIo.on('categoryScreenShare', async(data) => {
+            setThemeInput(data.themeInput);
+            setTheme(data.theme);
+            setIsInputShown(data.isInputShown);
+        });
+
+        socketIo.on('categoryOff', async(category) => {
+            console.log(`category: ${category}`)
+            setCategoryIsOn(category);
+        });
+
+        return () => {
+            socketIo.off('categoryScreenShare');
+            socketIo.off('categoryOff');
+        };
+    }, []);
+
+
+
     return (
         <>
-            <LeaveGameModal />
             <div className={isHost ? `${styles.enabled}` : `${styles.disabled}`}>
                 <div className={styles.container}>
                     <div className={styles.themeLogoWrap}>
@@ -31,10 +76,21 @@ export default function Category() {
                                 </div>
                             ))}
                         </div>
-                        <div className={styles.themeInput} contentEditable>
-                            <span class="material-symbols-outlined">add</span>
-                            직접 설정
-                        </div>
+                        {isInputShown ? (
+                            <input
+                                className={styles.themeInput}
+                                type='text'
+                                value={themeInput}
+                                onChange={handleThemeInputChange}
+                                onKeyUp={submitThemeInput}
+                                placeholder="주제를 입력하세요"
+                            />
+                        ) : (
+                            <div
+                                className={styles.themeInputBtn}
+                                onClick={setIsInputShown(true)}
+                            >직접 설정</div>
+                        )}
                     </div>
                     <div className={styles.toast}>호스트는 주제를 설정해주세요.</div>
                 </div>

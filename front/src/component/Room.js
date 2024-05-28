@@ -5,20 +5,21 @@ import BeforeGame from './BeforeGame';
 import PlayingGame from "./PlayingGame";
 import { RoomNameContext } from "../context/RoomNameContext";
 import { PlayGameProvider } from "../context/PlayGameContext";
-import { CategoryProvider } from "../context/CategoryContext";
+import { CategoryContext } from "../context/CategoryContext";
 import { LoginContext } from "../context/LoginContext";
 import { HostContext } from '../context/HostContext';
 import useLeaveRoom from '../hooks/useLeaveRoom';
+import { PlayerProvider } from "../context/PlayerContext";
+import { PlayGameStateContext } from "../context/PlayGameStateContext";
 
 export default function Room() {
     const navigate = useNavigate();
-    const [playGame, setPlayGame] = useState(false);
     const { roomName } = useContext(RoomNameContext);
     const { userName } = useContext(LoginContext);
     const { isHost, setIsHost } = useContext(HostContext);
+    const { playGame, setPlayGame } = useContext(PlayGameStateContext);
     const { state } = useLocation();
     const isMounted = useRef(false);
-    const leaveRoom = useLeaveRoom();
 
     socketIo.on('deleteRoom', () => {
         navigate('/');
@@ -40,60 +41,39 @@ export default function Room() {
 
     useEffect(() => {
         if (isMounted.current) {
+            console.log(`playGame(${playGame}) emit`);
             socketIo.emit('handlePlayGame', roomName, playGame);
         } else {
             isMounted.current = true;
         }
     }, [playGame]);
 
-    function handlePlayGame() {
-        // endGame
-        // host는 BeforGame으로 설정(guest들도 함께), guest는 완전 나가기
-        if(playGame) {
-            if (isHost) {
-                setPlayGame(!playGame);
-            }
-            else {
-                leaveRoom(isHost);
-                navigate('/');
-            }
+    useEffect(() => {
+
+        const synchroPlayGame = (playGameState) => {
+            console.log(`synchroPlayGame(playGameState: (${playGameState}))`);
+            setPlayGame(playGameState);
         }
-        // startGame
-        // host는 PlayingGame으로 설정(guest들도 함께), guset는 결정권 없음
-        else {
-            if(isHost) {
-                setPlayGame(!playGame);
-            }
-            else {
-                alert('호스트만 게임을 시작할 수 있습니다.');
-            }
+        //이벤트 등록
+        socketIo.on('handlePlayGame', synchroPlayGame);
+        return () => {
+            //이벤트 해제
+            console.log('이벤트해제');
+            socketIo.off('handlePlayGame', synchroPlayGame);
         }
-    };
 
-    // host가 설정한 상태로(playGame/ endGame) 이동
-    socketIo.on('handlePlayGame', (playGameState) => {
-        setPlayGame(playGameState);
-    })
-
-
+    }, []);
 
     return (
         <div>
-            <CategoryProvider>            
-            <PlayGameProvider handlePlayGame={handlePlayGame}>
+            <PlayerProvider>
                 {playGame ?
                     <PlayingGame
-                        socket={socketIo}
-                        playGame ={playGame}
                     />
                     :
-                    <BeforeGame
-                        playGame={playGame}
-                    />
+                    <BeforeGame />
                 }
-            </PlayGameProvider>
-            </CategoryProvider>
-
+            </PlayerProvider>
         </div>
     );
 }

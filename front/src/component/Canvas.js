@@ -4,7 +4,6 @@ import styles from '../style/canvas.module.css';
 import Brush from '../img/brush.png';
 import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
-import LeaveGameModal from './LeaveGameModal';
 import { RoomNameContext } from '../context/RoomNameContext';
 
 export default function Canvas() {
@@ -126,7 +125,6 @@ export default function Canvas() {
 
     return (
         <div>
-            <LeaveGameModal />
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />

@@ -77,6 +77,7 @@ module.exports = function (io) {
         socket.on('handlePlayGame', async (roomName, playGameState) => {
             await Room.updateOne({ roomName: roomName }, { status: playGameState });
             socket.to(roomName).emit('handlePlayGame', playGameState);
+            console.log(`서버: playGameState ${playGameState}로 받음`)
         })
 
         socket.on('stopDraw', async (roomName, position) => {
@@ -97,6 +98,14 @@ module.exports = function (io) {
 
         socket.on('sendMsg', async (roomName, userName, msg) => {
             io.to(roomName).emit('receiveMsg', msg, socket.id, userName);
+        })
+
+        socket.on('categoryScreenShare', async (roomName, data) => {
+            io.to(roomName).emit('categoryScreenShare', data);
+        });
+
+        socket.on('categoryOff', async (roomName, categoryIsOn) => {
+            io.to(roomName).emit('categoryOff', categoryIsOn);
         })
 
         socket.on('disconnect', () => {
