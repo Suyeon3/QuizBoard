@@ -5,6 +5,7 @@ import Brush from '../img/brush.png';
 import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
 import { RoomNameContext } from '../context/RoomNameContext';
+import InputAnswer from "./InputAnswer";
 
 export default function Canvas() {
     const socket = socketIo;
@@ -125,6 +126,7 @@ export default function Canvas() {
 
     return (
         <div>
+            <InputAnswer />
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />

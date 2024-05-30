@@ -10,7 +10,7 @@ export default function Category() {
     const themeList = ['음식', '영화', '인물', '장소', '사자성어', '속담'];
     const { roomName } = useContext(RoomNameContext);
     const { isHost } = useContext(HostContext);
-    const { theme, setTheme, setCategoryIsOn, categoryIsOn } = useContext(CategoryContext);
+    const { theme, setTheme, setCategoryIsOn } = useContext(CategoryContext);
     const [isInputShown, setIsInputShown] = useState(false);
     const [themeInput, setThemeInput] = useState('');
 
@@ -18,6 +18,7 @@ export default function Category() {
     function chooseTheme(e) {
         setTheme(e.target.value);
         setCategoryIsOn(false);
+        socketIo.emit('categoryOff', roomName, false)
     }
 
     function handleThemeInputChange(e) {

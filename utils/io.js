@@ -108,6 +108,15 @@ module.exports = function (io) {
             io.to(roomName).emit('categoryOff', categoryIsOn);
         })
 
+        socket.on('selectDrawer', async (roomName, players) => {
+            const drawer = Math.floor(Math.random() * players.length);
+            io.to(roomName).emit('selectDrawer', drawer);
+        })
+
+        socket.on('submitAnswer', async (roomName, answer) => {
+            io.to(roomName).emit('submitAnswer', answer);
+        })
+
         socket.on('disconnect', () => {
             console.log('user is disconnected')
         })

@@ -1,11 +1,15 @@
 import { useNavigate, useLocation} from 'react-router-dom';
+import { useState, useEffect, memo } from 'react';
 
 export default function useHash() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const hashString = location.hash;
-    const hashArray = hashString ? hashString.split('#') : [];
+    const [currentHash, setCurrentHash] = useState(location.hash);
+
+    useEffect(() => {
+        setCurrentHash(location.hash);
+    }, [location.hash]);
 
     function setHash(hash) {
         navigate(`#${hash}`);
@@ -15,9 +19,13 @@ export default function useHash() {
         navigate(location.pathname);
     }
 
-    function HashElement({children}) {
-        return <>{hashString && hashArray.map(() => children)}</>
-    }
+    const HashElement = ({children}) => {
+        return <>{currentHash==='#leaveModal' &&  children}</>
+    };
 
-    return { setHash, removeHash, HashElement}
+    const HashElement2 = ({children}) => {
+        return <>{currentHash==='#inputAnswer' && children}</>
+    };
+
+    return { setHash, removeHash, HashElement, HashElement2}
 }

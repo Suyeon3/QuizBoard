@@ -21,7 +21,7 @@ export default function LeaveGameModal() {
                 <img
                     className={styles.modalOpenBtn}
                     src={BackButton}
-                    onClick={() => setHash('modal')}
+                    onClick={() => setHash('leaveModal')}
                 />
             </div>
             <HashElement>

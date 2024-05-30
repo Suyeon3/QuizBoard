@@ -1,41 +1,83 @@
 import socketIo from "../server";
-import useDrawerHandler from "../hooks/useDrawerHandler";
 import useHash from '../hooks/useHash';
-import { DrawerContext } from '../context/PlayerContext';
-import { useContext } from "react";
+import { PlayerContext } from '../context/PlayerContext';
+import { useContext, useEffect, useRef, memo } from "react";
 import styles from '../style/inputAnswer.module.css'
+import { RoomNameContext } from "../context/RoomNameContext";
+import { HostContext } from "../context/HostContext";
+import { CategoryContext } from "../context/CategoryContext";
 
 //Todo: drawer context로 설정해서 상태값 끌고 오기
-export default function inputAnswer() {
-    const { setHash, removeHash, HashElement } = useHash();
-    const { players, drawer, setDrawer } = useContext(DrawerContext);
-    const [showInputAnswer, setShowInputAnswer] = useState(false);
+export default function InputAnswer() {
+    const { setHash, removeHash, HashElement2 } = useHash();
+    const { players, drawer, setDrawer } = useContext(PlayerContext);
+    const { isHost } = useContext(HostContext);
+    const { roomName } = useContext(RoomNameContext);
+    const { answer, setAnswer } = useContext(CategoryContext);
+    const isMounted = useRef(false);
 
     useEffect(() => {
+        console.log(`players: ${players}`);
         if (players[0]) {
-            const drawer = Math.floor(Math.random * players.length);
-            setDrawer(drawer);
+            if (isHost) socketIo.emit('selectDrawer', roomName, players);
         }
-    }, [players])
+    }, [])
 
     useEffect(() => {
-        // drawer가 바뀌면 어떻게 하지?
-        // setModal을 하고, 조건문으로 렌더링 다르게
-        if (drawer === socketIo.id) setShowInputAnswer(true);
-        setHash('inputAnswer');
+        socketIo.on('selectDrawer', async (drawer) => {
+            setDrawer(players[drawer]);
+        });
+
+        socketIo.on('submitAnswer', async (answer) => {
+            setAnswer(answer);
+        });
+
+        return () => {
+            socketIo.off('selectDrawer');
+            socketIo.off('submitAnswer');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isMounted.current) {
+            console.log(drawer);
+            setHash('inputAnswer');
+        } else {
+            isMounted.current = true;
+        }
     }, [drawer])
 
-    return (
-        <HashElement>
-            {showInputAnswer ? 
-            <div className={styles.background}>
-                <input />
-                <div className={styles.toast}>제시어를 입력해주세요.</div>
-            </div> 
-            : 
-            <div className={styles.background}>
-                <div className={styles.toast}>제시어 입력중..</div>
-            </div>}
-        </HashElement>
-    )
+    function submitAnswer(e) {
+        if (e.keyCode === 13) {
+            socketIo.emit('submitAnswer', roomName, e.target.value);
+            removeHash();
+            e.target.value = '';
+        }
+    }
+
+
+
+
+    if (drawer === socketIo.id) {
+        return (
+            <HashElement2>
+                <div className={styles.background}>
+                    <input className={styles.input}
+                        onKeyUp={submitAnswer} />
+                    <div className={styles.toast}>
+                        제시어를 입력해주세요.
+                    </div>
+                </div>
+            </HashElement2>
+        )
+    } else {
+        return (
+            <HashElement2>
+                <div className={styles.background}>
+                    <div className={styles.toast}>제시어 입력중..</div>
+                </div>
+            </HashElement2>
+        )
+    }
+
 }
