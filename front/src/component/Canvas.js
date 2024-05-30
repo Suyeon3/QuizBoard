@@ -6,6 +6,10 @@ import Eraser from '../img/eraser.png';
 import Reset from '../img/reset.png';
 import { RoomNameContext } from '../context/RoomNameContext';
 import InputAnswer from "./InputAnswer";
+import useSelectDrawer from "../hooks/useSelectDrawer";
+import { PlayerContext } from "../context/PlayerContext";
+import Timer from './Timer';
+import useHash from "../hooks/useHash";
 
 export default function Canvas() {
     const socket = socketIo;
@@ -15,6 +19,36 @@ export default function Canvas() {
     const [currentColor, setCurrentColor] = useState('black');
     const { roomName } = useContext(RoomNameContext);
 
+    const { setHash } = useHash();
+    const { drawer, setDrawer, players } = useContext(PlayerContext);
+    const { replaceDrawer } = useSelectDrawer();
+    const isMounted = useRef(false);
+    const [forceUpdate, setForceUpdate] = useState(false);
+
+    // 첫 마운트시 drawer 설정 및 'selectDrawer' 이벤트 등록
+    useEffect(() => {
+        replaceDrawer();
+
+        socketIo.on('selectDrawer', async (drawer) => {
+            console.log('selectDrawer 이벤트 서버로부터 받음', drawer);
+            setDrawer(players[drawer]);
+            setForceUpdate((prev) => !prev) //강제로 업데이트 트리거
+        })
+
+        return () => socketIo.off('selectDrawer');
+    }, []);
+
+    // drawer 바뀔때마다 제시어 입력창 열기
+    useEffect(() => {
+        console.log('drawer가 바뀌긴 함');
+        if (isMounted.current) {
+            setHash('inputAnswer');
+        } else {
+            isMounted.current = true;
+        }
+    }, [drawer, forceUpdate]);
+
+    //----------------------------------------------------------
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');    // 여기가 초기화
@@ -127,6 +161,7 @@ export default function Canvas() {
     return (
         <div>
             <InputAnswer />
+            <Timer />
             <div className={styles.sidebar}>
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />

@@ -15,7 +15,7 @@ export default function useBackHandler() {
         const listenBack = () => {
 
             if (playGame) {
-                setHash('modal');
+                setHash('leaveModal');
             } else {
                 leaveRoom();
             }

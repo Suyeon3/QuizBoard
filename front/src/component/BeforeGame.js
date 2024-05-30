@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Logo from '../img/Logo.png';
 import LogoImg from '../img/LogoImage.png';
 import styles from '../style/beforegame.module.css';
@@ -7,13 +7,23 @@ import Chat from './Chat';
 import useLeaveRoom from '../hooks/useLeaveRoom';
 import useBackHandler from '../hooks/useBackHandler';
 import { PlayGameStateContext } from '../context/PlayGameStateContext';
+import { CategoryContext } from '../context/CategoryContext';
+import { PlayerContext } from '../context/PlayerContext';
 
 export default function BeforeGame() {
-    const {setPlayGame} = useContext(PlayGameStateContext)
+    const { setTheme, setAnswer } = useContext(CategoryContext)
+    const { setPlayGame } = useContext(PlayGameStateContext)
+    const { setDrawer } = useContext(PlayerContext);
     // const handlePlayGame = useContext(PlayGameContext);
     const leaveRoom = useLeaveRoom();
 
     useBackHandler();
+
+    useEffect(() => {
+        setDrawer('');
+        setTheme('');
+        setAnswer('');
+    }, [])
 
     function startGame() {
         setPlayGame(true);

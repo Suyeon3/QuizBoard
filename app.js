@@ -50,7 +50,7 @@ app.post('/login', async (req, res) => {
         if (userid && password) {
             const user = await User.findOne({ userId: userid });
             if (user) {   // 아이디 일치
-                 // Todo: 입력된 비밀번호가 해시된 저장값과 같은지 비교
+                // Todo: 입력된 비밀번호가 해시된 저장값과 같은지 비교
                 if (user.password === password) {
                     // Todo: 세션 정보 갱신으로 수정
                     sendData.isLogin = true;
@@ -90,6 +90,7 @@ app.post('/players', async (req, res) => {
         console.error(err);
     }
 })
+
 
 httpServer.listen(process.env.REACT_APP_PORT || 5001, () => {
     console.log('server listening on port', process.env.REACT_APP_PORT);

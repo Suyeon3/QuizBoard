@@ -1,61 +1,36 @@
 import socketIo from "../server";
 import useHash from '../hooks/useHash';
 import { PlayerContext } from '../context/PlayerContext';
-import { useContext, useEffect, useRef, memo } from "react";
+import { useContext, useEffect } from "react";
 import styles from '../style/inputAnswer.module.css'
 import { RoomNameContext } from "../context/RoomNameContext";
-import { HostContext } from "../context/HostContext";
 import { CategoryContext } from "../context/CategoryContext";
 
-//Todo: drawer context로 설정해서 상태값 끌고 오기
 export default function InputAnswer() {
-    const { setHash, removeHash, HashElement2 } = useHash();
-    const { players, drawer, setDrawer } = useContext(PlayerContext);
-    const { isHost } = useContext(HostContext);
+    const { removeHash, HashElement2 } = useHash();
+    const { drawer } = useContext(PlayerContext);
     const { roomName } = useContext(RoomNameContext);
-    const { answer, setAnswer } = useContext(CategoryContext);
-    const isMounted = useRef(false);
+    const { setAnswer } = useContext(CategoryContext);
 
     useEffect(() => {
-        console.log(`players: ${players}`);
-        if (players[0]) {
-            if (isHost) socketIo.emit('selectDrawer', roomName, players);
+        socketIo.on('submitAnswer', async (answer) => {
+            setAnswer(answer);
+            removeHash();
+            // Todo: answer가 정해지면 그때부터 시간이 가도록...
+        });
+        
+        return () => {
+            socketIo.off('submitAnswer');
         }
     }, [])
 
-    useEffect(() => {
-        socketIo.on('selectDrawer', async (drawer) => {
-            setDrawer(players[drawer]);
-        });
-
-        socketIo.on('submitAnswer', async (answer) => {
-            setAnswer(answer);
-        });
-
-        return () => {
-            socketIo.off('selectDrawer');
-            socketIo.off('submitAnswer');
-        }
-    }, []);
-
-    useEffect(() => {
-        if (isMounted.current) {
-            console.log(drawer);
-            setHash('inputAnswer');
-        } else {
-            isMounted.current = true;
-        }
-    }, [drawer])
-
     function submitAnswer(e) {
         if (e.keyCode === 13) {
+            console.log(e.target.value);
             socketIo.emit('submitAnswer', roomName, e.target.value);
-            removeHash();
             e.target.value = '';
         }
     }
-
-
 
 
     if (drawer === socketIo.id) {

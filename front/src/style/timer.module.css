@@ -1,0 +1,14 @@
+.timer {
+    background: white;
+    width: 11.5rem;
+    height: 2.3rem;
+    left: 50%;
+    top: 4%;
+    border-radius: 17px;
+    font-size: larger;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
