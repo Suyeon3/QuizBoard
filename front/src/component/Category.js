@@ -5,6 +5,7 @@ import { HostContext } from '../context/HostContext';
 import { CategoryContext } from '../context/CategoryContext';
 import { useContext, useState, useEffect } from 'react';
 import { RoomNameContext } from '../context/RoomNameContext';
+import Chat from './Chat';
 
 export default function Category() {
     const themeList = ['음식', '영화', '인물', '장소', '사자성어', '속담'];
@@ -96,6 +97,7 @@ export default function Category() {
                     <div className={styles.toast}>호스트는 주제를 설정해주세요.</div>
                 </div>
             </div>
+            <Chat />
         </>
     )
 }

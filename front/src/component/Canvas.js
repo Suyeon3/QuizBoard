@@ -1,4 +1,5 @@
 import socketIo from "../server";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState, useRef, useContext } from 'react';
 import styles from '../style/canvas.module.css';
 import Brush from '../img/brush.png';
@@ -9,6 +10,7 @@ import InputAnswer from "./InputAnswer";
 import useSelectDrawer from "../hooks/useSelectDrawer";
 import { PlayerContext } from "../context/PlayerContext";
 import Timer from './Timer';
+import Chat from './Chat';
 import useHash from "../hooks/useHash";
 
 export default function Canvas() {
@@ -18,6 +20,8 @@ export default function Canvas() {
     const [painting, setPainting] = useState(false);
     const [currentColor, setCurrentColor] = useState('black');
     const { roomName } = useContext(RoomNameContext);
+
+    const location = useLocation();
 
     const { setHash } = useHash();
     const { drawer, setDrawer, players } = useContext(PlayerContext);
@@ -30,7 +34,6 @@ export default function Canvas() {
         replaceDrawer();
 
         socketIo.on('selectDrawer', async (drawer) => {
-            console.log('selectDrawer 이벤트 서버로부터 받음', drawer);
             setDrawer(players[drawer]);
             setForceUpdate((prev) => !prev) //강제로 업데이트 트리거
         })
@@ -40,15 +43,16 @@ export default function Canvas() {
 
     // drawer 바뀔때마다 제시어 입력창 열기
     useEffect(() => {
-        console.log('drawer가 바뀌긴 함');
         if (isMounted.current) {
             setHash('inputAnswer');
+            socket.emit('reset', roomName, '#F2F7FF');
         } else {
             isMounted.current = true;
         }
     }, [drawer, forceUpdate]);
 
-    //----------------------------------------------------------
+    // 그림그리기
+    // Todo: Drawer만 그릴 수 있도록 제한
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');    // 여기가 초기화
@@ -162,7 +166,10 @@ export default function Canvas() {
         <div>
             <InputAnswer />
             <Timer />
-            <div className={styles.sidebar}>
+            <div
+                className={styles.sidebar}
+                style={{visibility: drawer === socket.id ? 'visible' : 'hidden'}}
+            >
                 <div className={styles.tools}>
                     <img id={styles.tool} data-tool='brush' src={Brush} />
                     <img id={styles.tool} data-tool='eraser' src={Eraser} onClick={setEraser} />
@@ -179,7 +186,7 @@ export default function Canvas() {
                     <div id={styles.color} data-color='white'></div>
                 </div>
             </div>
-            <div className={styles.canvasWrap}>
+            <div className={drawer === socket.id ? `${styles.canvas_enabled}` : `${styles.canvas_disabled}`}>
                 <canvas
                     ref={canvasRef}
                     className={styles.canvas}
@@ -191,6 +198,7 @@ export default function Canvas() {
 
                 </canvas>
             </div>
+            {location.hash !== '#inputAnswer' && <Chat />}
         </div>
     );
 }

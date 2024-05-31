@@ -1,3 +1,11 @@
+.canvas_enabled {
+    pointer-events: auto;
+}
+
+.canvas_disabled {
+    pointer-events: none;
+}
+
 .canvas {
     background: #F2F7FF;
     display: block;
