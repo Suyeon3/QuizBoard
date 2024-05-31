@@ -1,0 +1,12 @@
+.theme {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    position: absolute;
+    width: 6rem;
+    height: 2.3rem;
+    right: 57%;
+    top: 4%;
+    border-radius: 15px;
+}

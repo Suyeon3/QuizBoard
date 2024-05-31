@@ -1,0 +1,17 @@
+.saveBtn {
+    display: flex;
+    background-color: #D3D9E9;
+    position: absolute;
+    top: 4%;
+    right: 17%;
+    height: 2.3rem;
+    width: 6rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: small;
+}
+
+.saveBtn:hover {
+    background: #9cb0e9;
+}

@@ -3,7 +3,7 @@ import styles from '../style/category.module.css';
 import ThemeLogo from '../img/theme.png'
 import { HostContext } from '../context/HostContext';
 import { CategoryContext } from '../context/CategoryContext';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { RoomNameContext } from '../context/RoomNameContext';
 import Chat from './Chat';
 
@@ -14,10 +14,12 @@ export default function Category() {
     const { theme, setTheme, setCategoryIsOn } = useContext(CategoryContext);
     const [isInputShown, setIsInputShown] = useState(false);
     const [themeInput, setThemeInput] = useState('');
+    const themeRef = useRef(null);
 
 
-    function chooseTheme(e) {
-        setTheme(e.target.value);
+    function chooseTheme() {
+        console.log(themeRef.current.innerText);
+        setTheme(themeRef.current.innerText);
         setCategoryIsOn(false);
         socketIo.emit('categoryOff', roomName, false)
     }
@@ -44,13 +46,13 @@ export default function Category() {
     }, [themeInput, theme, isInputShown]);
 
     useEffect(() => {
-        socketIo.on('categoryScreenShare', async(data) => {
+        socketIo.on('categoryScreenShare', async (data) => {
             setThemeInput(data.themeInput);
             setTheme(data.theme);
             setIsInputShown(data.isInputShown);
         });
 
-        socketIo.on('categoryOff', async(category) => {
+        socketIo.on('categoryOff', async (category) => {
             console.log(`category: ${category}`)
             setCategoryIsOn(category);
         });
@@ -73,7 +75,11 @@ export default function Category() {
                     <div className={styles.themeBox}>
                         <div className={styles.themeListWrap}>
                             {themeList.map((theme, idx) => (
-                                <div key={idx} className={styles.theme} onClick={chooseTheme}>
+                                <div
+                                    key={idx}
+                                    className={styles.theme}
+                                    ref={themeRef}
+                                    onClick={chooseTheme}>
                                     {theme}
                                 </div>
                             ))}

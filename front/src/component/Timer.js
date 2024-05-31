@@ -9,13 +9,13 @@ export default function Timer() {
     const { drawer } = useContext(PlayerContext);
     const { replaceDrawer } = useSelectDrawer();
 
-    const time = useRef(60);  // 1분 30초부터 카운트다운
+    const time = useRef(90);  // 1분 30초부터 카운트다운
     const timeId = useRef(null);
-    const [ min, setMin ] = useState(0);
-    const [ sec, setSec ] = useState(10);
+    const [ min, setMin ] = useState(1);
+    const [ sec, setSec ] = useState(30);
 
     useEffect(() => {
-        time.current = 60;
+        time.current = 90;
         if (answer) {
             timeId.current = setInterval(() => {
                 setMin(Math.floor(time.current / 60));

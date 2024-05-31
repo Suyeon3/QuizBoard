@@ -2,9 +2,9 @@
     background: white;
     width: 11.5rem;
     height: 2.3rem;
-    left: 50%;
+    right: 40%;
     top: 4%;
-    border-radius: 17px;
+    border-radius: 15px;
     font-size: larger;
     position: absolute;
     display: flex;

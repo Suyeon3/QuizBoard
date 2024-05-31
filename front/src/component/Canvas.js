@@ -13,6 +13,8 @@ import Timer from './Timer';
 import Chat from './Chat';
 import useHash from "../hooks/useHash";
 import OpenAnswer from "./OpenAnswer";
+import ImageDownload from "./ImageDownload";
+import Theme from './Theme';
 
 export default function Canvas() {
     const socket = socketIo;
@@ -167,7 +169,9 @@ export default function Canvas() {
         <div>
             <InputAnswer />
             <OpenAnswer />
+            <Theme />
             <Timer />
+            <ImageDownload canvas={canvasRef.current}/>
             <div
                 className={styles.sidebar}
                 style={{visibility: drawer === socket.id ? 'visible' : 'hidden'}}
