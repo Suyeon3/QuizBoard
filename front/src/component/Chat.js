@@ -3,6 +3,9 @@ import socketIo from "../server";
 import styles from '../style/chat.module.css';
 import { RoomNameContext } from '../context/RoomNameContext';
 import { LoginContext } from '../context/LoginContext';
+import { QuizContext } from '../context/QuizContext';
+import { CategoryContext } from '../context/CategoryContext';
+import useHash from '../hooks/useHash';
 
 const MAX_MESSAGES = 30;
 
@@ -11,22 +14,32 @@ export default function Chat() {
     const [msgList, setMsgList] = useState([]);
     const { roomName } = useContext(RoomNameContext);
     const { userName } = useContext(LoginContext);
+    const { quizOpen } = useContext(QuizContext);
+    const { answer } = useContext(CategoryContext);
+    const { setHash } = useHash();
     const socket = socketIo;
 
     useEffect(() => {
 
         function receiveMessage(newMsg, sid, userName) {
+            
+            if (newMsg === answer) {
+                setTimeout(() => {
+                    console.log('openAnswerTimerId')
+                    setHash('openAnswer');
+                }, 1000);
+            }
             const msgType = (sid === socket.id) ? 'right_message' : 'left_message';
-            setMsgList((prevList) => [{message: newMsg, type: msgType, userName: userName}, ...prevList]);
-        }
+            setMsgList((prevList) => [{ message: newMsg, type: msgType, userName: userName }, ...prevList]);
+        };
 
-        socket.on('receiveMsg', receiveMessage) 
+        socket.on('receiveMsg', receiveMessage);
 
         return () => {
             socket.off('receiveMsg', receiveMessage);
         };
 
-    }, [socket, userName])
+    }, []);
 
     useEffect(() => {
         if (msgList.length > MAX_MESSAGES) {
@@ -57,7 +70,10 @@ export default function Chat() {
                         style={{ opacity: calculateOpacity(idx, msgList.length) }}
                     >
                         <span className={styles.user}>{msgObj.userName}</span>
-                        <span className={styles.content}>{msgObj.message}</span>
+                        <span
+                            className={styles.content}
+                            style={{ background: quizOpen && answer === msgObj.message ? '#92EF71' : '' }}
+                        >{msgObj.message}</span>
                     </div>
                 ))}
             </div>

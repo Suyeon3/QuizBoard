@@ -1,5 +1,5 @@
 import { useNavigate, useLocation} from 'react-router-dom';
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function useHash() {
     const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function useHash() {
         navigate(location.pathname);
     }
 
+    //Todo: HashElement 이름 바꾸기
     const HashElement = ({children}) => {
         return <>{currentHash==='#leaveModal' &&  children}</>
     };
@@ -27,5 +28,9 @@ export default function useHash() {
         return <>{currentHash==='#inputAnswer' && children}</>
     };
 
-    return { setHash, removeHash, HashElement, HashElement2}
+    const OpenAnswerElement = ({children}) => {
+        return <>{currentHash==='#openAnswer' && children}</>
+    };
+
+    return { setHash, removeHash, HashElement, HashElement2, OpenAnswerElement}
 }

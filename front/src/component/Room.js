@@ -4,12 +4,10 @@ import { useEffect, useState, useRef, useContext } from 'react';
 import BeforeGame from './BeforeGame';
 import PlayingGame from "./PlayingGame";
 import { RoomNameContext } from "../context/RoomNameContext";
-import { PlayGameProvider } from "../context/PlayGameContext";
-import { CategoryContext } from "../context/CategoryContext";
 import { LoginContext } from "../context/LoginContext";
 import { HostContext } from '../context/HostContext';
-import useLeaveRoom from '../hooks/useLeaveRoom';
 import { PlayerProvider } from "../context/PlayerContext";
+import { QuizProvider } from "../context/QuizContext";
 import { PlayGameStateContext } from "../context/PlayGameStateContext";
 
 export default function Room() {
@@ -67,12 +65,14 @@ export default function Room() {
     return (
         <div>
             <PlayerProvider>
+            <QuizProvider>
                 {playGame ?
                     <PlayingGame
                     />
                     :
                     <BeforeGame />
                 }
+            </QuizProvider>
             </PlayerProvider>
         </div>
     );

@@ -5,16 +5,19 @@ import { useContext, useEffect } from "react";
 import styles from '../style/inputAnswer.module.css'
 import { RoomNameContext } from "../context/RoomNameContext";
 import { CategoryContext } from "../context/CategoryContext";
+import { QuizContext } from "../context/QuizContext";
 
 export default function InputAnswer() {
     const { removeHash, HashElement2 } = useHash();
     const { drawer } = useContext(PlayerContext);
     const { roomName } = useContext(RoomNameContext);
     const { setAnswer } = useContext(CategoryContext);
+    const { setQuizOpen } = useContext(QuizContext);
 
     useEffect(() => {
         socketIo.on('submitAnswer', async (answer) => {
             setAnswer(answer);
+            setQuizOpen(true);
             removeHash();
             // Todo: answer가 정해지면 그때부터 시간이 가도록...
         });

@@ -12,6 +12,7 @@ import { PlayerContext } from "../context/PlayerContext";
 import Timer from './Timer';
 import Chat from './Chat';
 import useHash from "../hooks/useHash";
+import OpenAnswer from "./OpenAnswer";
 
 export default function Canvas() {
     const socket = socketIo;
@@ -165,6 +166,7 @@ export default function Canvas() {
     return (
         <div>
             <InputAnswer />
+            <OpenAnswer />
             <Timer />
             <div
                 className={styles.sidebar}
