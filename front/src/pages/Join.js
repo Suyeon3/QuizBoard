@@ -129,7 +129,7 @@ export default function Join() {
                 url = 'username';
             };
 
-            const response = await axios.post('/auth/join/email', body);
+            const response = await axios.post(`/auth/join/${url}`, body);
 
             const message = response.data.message;
 

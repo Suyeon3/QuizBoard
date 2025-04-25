@@ -1,6 +1,5 @@
 import socketIo from "../server";
 import { useAuthStore } from "../store/useAuthStore";
-import Header from './Header';
 import styles from '../style/login.module.css';
 import { useState } from "react";
 import axios from 'axios';
@@ -14,7 +13,7 @@ export default function Login() {
         setEmail(e.target.value);
     }
 
-    const handlePassword = () => {
+    const handlePassword = (e) => {
         setPassword(e.target.value);
     }
 
@@ -24,16 +23,9 @@ export default function Login() {
             password
         }
 
-        axios.post('http://localhost:5001/auth/login', userData)
+        axios.post('/auth/login', userData)
             .then((res) => {
                 console.log(res.data.message);
-                // accessToken을 로컬 스토리지에 저장(XSS에는 취약)
-                const accessToken = getCookie('accessToken');
-                console.log(`accessToken: ${accessToken}`)
-                if (accessToken) {
-                    localStorage.setItem('accessToken', accessToken);
-                }
-
             })
             .catch((error) => {
                 console.log(error.message);
@@ -43,7 +35,6 @@ export default function Login() {
 
     return (
         <div>
-            <Header page={'login'} />
             <div className={styles.wrap}>
                 <h1 className={styles.title}>login</h1>
                 <div className={styles.container}>

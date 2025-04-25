@@ -60,18 +60,14 @@ const replaceAccessToken = async (req, res, next) => {
 exports.login = async (req, res) => {
     try {
         console.log(req.body);
-        const { userId, userPw } = req.body;
-        const user = await User.findOne({ userId });
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(401).json({ message: '유효하지 않은 이메일입니다' })
         }
 
-        // 비밀번호 검증
-        const saltRounds = 13;
-        // DB에서 꺼내오는 걸로 수정
-        const hashedPassword = await bycrypt.hash(user.password, saltRounds);
-        const isMatch = await bycrypt.compare(userPw, hashedPassword);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: '비밀번호가 올바르지 않습니다.' });
         }
@@ -87,6 +83,7 @@ exports.login = async (req, res) => {
         });
         res.status(200).json({ message: '로그인 성공' })
     } catch (error) {
+        console.error('로그인 오류:', error);
         res.status(500).json({ message: '서버 오류' });
     }
 }
@@ -94,7 +91,7 @@ exports.login = async (req, res) => {
 
 // 클로저로 accessToken private화
 const createAccessTokenManager = (username, email) => {
-    const accessToken = jwt.sign({ username, email }, accesskey, { expiresIn: '30m' });
+    const accessToken = jwt.sign({ username: username, email: email }, accesskey, { expiresIn: '30m' });
 
     return {
         getAccessToken: () => accessToken

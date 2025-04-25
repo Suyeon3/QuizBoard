@@ -4,7 +4,7 @@ export default function JoinInput({label, name, value, type, placeholder, onChan
             {label}
             <input
                 type={type}
-                name={name}
+                name={name}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
