@@ -31,7 +31,10 @@ export default function BeforeGame() {
 
     return (
         <div>
-            <button onClick={leaveRoom}>퇴장하기</button>
+            <button
+                onClick={leaveRoom}
+                className={styles.leaveBtn}
+            >퇴장하기</button>
             <div className={styles.container}>
                 <div className={styles.logoWrap}>
                     <img src={LogoImg} className={styles.logoImg} />
@@ -40,7 +43,7 @@ export default function BeforeGame() {
                 <div className={styles.btnWrap}>
                     <div className={styles.startBtn} onClick={startGame}>게임 시작</div>
                 </div>
-            <Chat />
+                <Chat />
             </div>
         </div>
     )

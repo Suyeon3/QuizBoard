@@ -8,6 +8,17 @@ body {
     background: #D7E8FF;
 }
 
+.leaveBtn {
+    position: absolute;
+    border: none;
+    left: 2%;
+    top: 13px;
+    border-radius: 5.6px;
+    width: 5rem;
+    height: 1.8rem;
+    background: #eef4fc;
+}
+
 .container {
     margin-bottom: 3rem;
 }

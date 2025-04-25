@@ -2,7 +2,6 @@ const User = require('../Models/user');
 const Room = require('../Models/room');
 
 module.exports = function (io) {
-    //io~~
     io.on('connection', async (socket) => {
         console.log('client is connected', socket.id);
 
@@ -103,6 +102,10 @@ module.exports = function (io) {
         socket.on('categoryScreenShare', async (roomName, data) => {
             io.to(roomName).emit('categoryScreenShare', data);
         });
+
+        socket.on('setTheme', async (roomName, theme) => {
+            io.to(roomName).emit('setTheme', theme);
+        })
 
         socket.on('categoryOff', async (roomName, categoryIsOn) => {
             io.to(roomName).emit('categoryOff', categoryIsOn);

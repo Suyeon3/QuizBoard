@@ -14,29 +14,20 @@ export default function Category() {
     const { theme, setTheme, setCategoryIsOn } = useContext(CategoryContext);
     const [isInputShown, setIsInputShown] = useState(false);
     const [themeInput, setThemeInput] = useState('');
-    const themeRef = useRef(null);
+    const isMounted = useRef(false);
 
 
-    function chooseTheme() {
-        console.log(themeRef.current.innerText);
-        setTheme(themeRef.current.innerText);
-        setCategoryIsOn(false);
-        socketIo.emit('categoryOff', roomName, false)
+    function chooseTheme(e) {
+        console.log(e.target.innerText)
+        socketIo.emit('setTheme', roomName, e.target.innerText);
     }
-
-    function handleThemeInputChange(e) {
-        setThemeInput(e.target.value);
-    }
-
+    
     function submitThemeInput(e) {
         if (e.keyCode === 13) {
-            setTheme(themeInput);
-            setCategoryIsOn(false);
-            setIsInputShown(false);
-            socketIo.emit('categoryOff', roomName, false);
+            socketIo.emit('setTheme', roomName, e.target.value);
         }
     }
-
+    
     useEffect(() => {
         socketIo.emit('categoryScreenShare', roomName, {
             themeInput: themeInput,
@@ -44,7 +35,17 @@ export default function Category() {
             isInputShown: isInputShown
         })
     }, [themeInput, theme, isInputShown]);
-
+    
+    useEffect(() => {
+        if (isMounted.current) {
+            setCategoryIsOn(false);
+            setIsInputShown(false);
+            socketIo.emit('categoryOff', roomName, false);
+        } else {
+            isMounted.current = true;
+        }
+    }, [theme])
+    
     useEffect(() => {
         socketIo.on('categoryScreenShare', async (data) => {
             setThemeInput(data.themeInput);
@@ -57,9 +58,14 @@ export default function Category() {
             setCategoryIsOn(category);
         });
 
+        socketIo.on('setTheme', async (theme) => {
+            setTheme(theme);
+        })
+
         return () => {
             socketIo.off('categoryScreenShare');
             socketIo.off('categoryOff');
+            socketIo.off('setTheme');
         };
     }, []);
 
@@ -78,7 +84,6 @@ export default function Category() {
                                 <div
                                     key={idx}
                                     className={styles.theme}
-                                    ref={themeRef}
                                     onClick={chooseTheme}>
                                     {theme}
                                 </div>
@@ -88,8 +93,6 @@ export default function Category() {
                             <input
                                 className={styles.themeInput}
                                 type='text'
-                                value={themeInput}
-                                onChange={handleThemeInputChange}
                                 onKeyUp={submitThemeInput}
                                 placeholder="주제를 입력하세요"
                             />

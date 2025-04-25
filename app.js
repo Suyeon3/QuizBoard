@@ -1,28 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
 require('dotenv').config();
-const app = express();
-const cors = require('cors');
-const path = require('path');
-const bodyParser = require('body-parser');
-// const routes = require('./routes.js');
+const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
 
-const db = mongoose.connection;
+const app = express();
+const httpServer = createServer(app);
+// const mongoose = require('mongoose');
+const cors = require('cors');
 
-mongoose.connect(process.env.REACT_APP_DB)
-    .catch(error => handleError(error))
-    .then(() => {
-        console.log('connected to database');
-    });
-
-app.use(express.static(path.join(__dirname, 'front', 'public')));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
         origin: "http://localhost:3000",
@@ -30,9 +20,22 @@ const io = new Server(httpServer, {
 })
 
 require("./utils/io")(io);
+
+// const routes = require('./routes.js');
+
+// const db = mongoose.connection;
+
+// mongoose.connect(process.env.REACT_APP_DB)
+//     .catch(error => handleError(error))
+//     .then(() => {
+//         console.log('connected to database');
+//     });
+
 const User = require('./Models/user');
 const Room = require('./Models/room');
 
+
+//??
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'front', 'public', 'index.html'));
 })

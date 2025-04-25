@@ -8,14 +8,9 @@ const imageSchema = new mongoose.Schema(
 const Image = mongoose.model('image', imageSchema);
 
 const userSchema = new mongoose.Schema({
-	userName: {
+	username: {
 		type: String,
 		maxlength: 50,
-	},
-	userId: {
-		type: String,
-		required: true,
-		unique: true
 	},
 	email: {
 		type: String,
@@ -26,18 +21,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		minlength: 5,
-	},
-	gallery: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: Image
-	}],
-	sid: {
-		type: String,	
-	},
-    online: {
-        type: Boolean,
-        dafault: false
-    }
+	}
 })
 
 const User = mongoose.model('user', userSchema);
